@@ -77,3 +77,24 @@ Returns a `400` HTTP status code
 #### `respondCreated()`
 
 Returns a `201` HTTP status code
+
+## Contribution
+
+Any ideas are welcome. Feel free to submit any issues or pull requests.
+
+## Testing
+
+_Tests to follow..._
+
+## Security
+
+If you discover any security related issues, please email rob@f9web.co.uk instead of using the issue tracker.
+
+## Credits
+
+- [Rob Allport](https://github.com/ultrono) for [F9 Web Ltd.](https://www.f9web.co.uk)
+
+## License
+
+The MIT License (MIT). Please see [License File](LICENSE) for more information.
+
