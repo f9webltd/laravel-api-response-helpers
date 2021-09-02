@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ApiResponseHelpers;
+namespace F9Web\ApiResponseHelpers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
