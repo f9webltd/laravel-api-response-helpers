@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Traits;
+namespace ApiResponseHelpers;
 
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use function response;
 
-trait ApiResponseHelpers
+trait Helpers
 {
     /**
      * @param string|\Exception $message
