@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 use function response;
 
-trait Helpers
+trait ApiResponseHelpers
 {
     /**
      * @param string|\Exception $message
