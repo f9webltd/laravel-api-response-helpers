@@ -74,6 +74,18 @@ trait ApiResponseHelpers
     {
         return $this->apiResponse([], Response::HTTP_CREATED);
     }
+    
+    public function respondFailedValidation(?string $message = null): JsonResponse
+    {
+        $message = $message instanceof Exception
+            ? $message->getMessage()
+            : $message;
+        
+        return $this->apiResponse(
+            ['message' => $message ?? 'Validation errors'],
+            Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
 
     private function apiResponse(array $data, int $code = 200): JsonResponse
     {
