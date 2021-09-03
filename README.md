@@ -19,7 +19,7 @@ Whilst simple, this package has two aims:
 
 ## Requirements
 
-- PHP `^7.4 | ^8.0`
+- PHP `^8.0`
 - Laravel 8 or above
 
 ## Installation / Usage
