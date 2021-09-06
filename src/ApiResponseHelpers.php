@@ -43,7 +43,7 @@ trait ApiResponseHelpers
 
     public function respondOk(string $message): JsonResponse
     {
-        return $this->respondWithSuccess([$message]);
+        return $this->respondWithSuccess(['success' => $message]);
     }
 
     public function respondUnAuthenticated(?string $message = null): JsonResponse
@@ -87,6 +87,14 @@ trait ApiResponseHelpers
         return $this->apiResponse(
             [$key => $message ?? 'Validation errors'],
             Response::HTTP_UNPROCESSABLE_ENTITY
+        );
+    }
+
+    public function respondTeapot(): JsonResponse
+    {
+        return $this->apiResponse(
+          ['message' => 'I\'m a teapot'],
+          Response::HTTP_I_AM_A_TEAPOT
         );
     }
 
