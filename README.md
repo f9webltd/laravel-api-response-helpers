@@ -1,5 +1,6 @@
 ![](https://banners.beyondco.de/API%20Response%20Helpers.png?theme=light&packageManager=composer+require&packageName=f9webltd%2Flaravel-api-response-helpers&pattern=brickWall&style=style_1&description=Some+simple+API+respons+ehelpers+for+your+Laravel+application&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg)
 
+[![run-tests](https://img.shields.io/github/workflow/status/f9webltd/laravel-api-response-helpers/run-tests?style=flat-square)](https://github.com/f9webltd/laravel-api-response-helpers/actions/workflows/run-tests.yml)
 [![Packagist Version](https://img.shields.io/packagist/v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
 [![Packagist PHP Version](
 https://img.shields.io/packagist/php-v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
