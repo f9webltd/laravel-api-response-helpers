@@ -22,14 +22,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-    -   name: Setup PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: curl, mbstring, zip, pcntl, sqlite, pdo_sqlite, iconv
           coverage: none
 
-    -   name: Install dependencies
+      - name: Install dependencies
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
