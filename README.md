@@ -9,14 +9,7 @@ https://img.shields.io/packagist/php-v/f9webltd/laravel-api-response-helpers?sty
 
 # Laravel API Response Helpers
 
-An insanely simple package allowing for consistent API responses throughout your Laravel application.
-
-## Purpose
-
-Whilst simple, this package has two aims:
-
-- allow for consistent API responses throughout the application
-- allow for more verbose / readable code
+A simple package allowing for consistent API responses throughout your Laravel application.
 
 ## Requirements
 
@@ -28,7 +21,7 @@ Whilst simple, this package has two aims:
 `composer require f9webltd/laravel-api-response-helpers`
 
 
-Simply reference the required trait in your controller. Optionally, use the trait on a base controller:
+Simply reference the required trait in your controller:
 
 ```
 <?php
@@ -49,6 +42,7 @@ class OrdersController
 }
 ```
 
+Optionally, the trait could be imported within a base controller.
 
 ## Available methods
 
@@ -81,13 +75,29 @@ Returns a `400` HTTP status code
 
 Returns a `201` HTTP status code
 
+## Motivation
+
+Ensure consistent JSON API responses throughout an application. The motivation was primarily based on a very old inherited Laravel project. The project contained a plethora of methods/structures used to return an error:
+
+- `response()->json(['error' => $error], 400)`
+- `response()->json(['data' => ['error' => $error], 400)`
+- `response()->json(['message' => $error], Response::HTTP_BAD_REQUEST)`
+- `response()->json([$error], 400)`
+- etc.
+
+I wanted to add a simple trait that kept this consistent, in this case:
+
+`$this->respondError('Ouch')`
+
+This package is intended to be used **alongside** Laravel's  [API resources](https://laravel.com/docs/8.x/eloquent-resources) and in no way replaces them.
+
 ## Contribution
 
 Any ideas are welcome. Feel free to submit any issues or pull requests.
 
 ## Testing
 
-_Tests to follow..._
+`composer test`
 
 ## Security
 
