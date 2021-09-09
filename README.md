@@ -71,9 +71,13 @@ Returns a `403` HTTP status code
 
 Returns a `400` HTTP status code
 
-#### `respondCreated()`
+#### `respondCreated(?array $data = [])`
 
-Returns a `201` HTTP status code
+Returns a `201` HTTP status code, with response optional data
+
+#### `respondNoContent(?array $data = [])`
+
+Returns a `204` HTTP status code, with response optional data. Technically the response body should be empty. However, functionality to optionally return data was added to handle legacy projects.
 
 ## Motivation
 
