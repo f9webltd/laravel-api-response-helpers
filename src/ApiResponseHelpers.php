@@ -19,7 +19,7 @@ trait ApiResponseHelpers
      * @return \Illuminate\Http\JsonResponse
      */
     public function respondNotFound(
-        string|Exception $message,
+        $message,
         ?string $key = 'error'
     ): JsonResponse {
         $message = $message instanceof Exception
