@@ -75,11 +75,16 @@ trait ApiResponseHelpers
         return $this->apiResponse($data, Response::HTTP_CREATED);
     }
     
+    /**
+     * @param string|\Exception $message
+     * @param  string|null  $key
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function respondFailedValidation(
-        string|Exception $message,
+        $message,
         ?string $key = 'message'
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $message = $message instanceof Exception
             ? $message->getMessage()
             : $message;
