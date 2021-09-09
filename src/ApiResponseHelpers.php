@@ -97,6 +97,11 @@ trait ApiResponseHelpers
           Response::HTTP_I_AM_A_TEAPOT
         );
     }
+    
+    public function respondNoContent(?array $data = []): JsonResponse
+    {
+        return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
+    }
 
     private function apiResponse(array $data, int $code = 200): JsonResponse
     {
