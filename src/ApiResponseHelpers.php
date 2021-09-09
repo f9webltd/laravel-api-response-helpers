@@ -70,9 +70,9 @@ trait ApiResponseHelpers
         );
     }
 
-    public function respondCreated(): JsonResponse
+    public function respondCreated(?array $data = []): JsonResponse
     {
-        return $this->apiResponse([], Response::HTTP_CREATED);
+        return $this->apiResponse($data, Response::HTTP_CREATED);
     }
     
     public function respondFailedValidation(
