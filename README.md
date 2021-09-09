@@ -13,8 +13,8 @@ A simple package allowing for consistent API responses throughout your Laravel a
 
 ## Requirements
 
-- PHP `^8.0`
-- Laravel 8 or above
+- PHP `^7.4 | ^8.0`
+- Laravel 6, 7 and 8
 
 ## Installation / Usage
 
