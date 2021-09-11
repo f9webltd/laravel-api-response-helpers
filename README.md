@@ -57,7 +57,7 @@ Returns a `200` HTTP status code
 
 #### `respondOk(string $message)`
 
-Returns a `404` HTTP status code
+Returns a `200` HTTP status code
 
 #### `respondUnAuthenticated(?string $message = null)`
 
