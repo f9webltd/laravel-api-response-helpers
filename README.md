@@ -1,4 +1,4 @@
-![](https://banners.beyondco.de/API%20Response%20Helpers.png?theme=light&packageManager=composer+require&packageName=f9webltd%2Flaravel-api-response-helpers&pattern=brickWall&style=style_1&description=Some+simple+API+respons+ehelpers+for+your+Laravel+application&md=1&showWatermark=0&fontSize=100px&images=https%3A%2F%2Flaravel.com%2Fimg%2Flogomark.min.svg)
+![](https://banners.beyondco.de/Laravel%20API%20Response%20Helpers.png?theme=light&packageManager=composer+require&packageName=f9webltd%2Flaravel-api-response-helpers&pattern=brickWall&style=style_1&description=Generate+consistent+API+responses+for+your+Laravel+application&md=1&showWatermark=0&fontSize=100px&images=code)
 
 [![run-tests](https://img.shields.io/github/workflow/status/f9webltd/laravel-api-response-helpers/run-tests?style=flat-square)](https://github.com/f9webltd/laravel-api-response-helpers/actions/workflows/run-tests.yml)
 [![Packagist Version](https://img.shields.io/packagist/v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
@@ -77,7 +77,7 @@ Returns a `201` HTTP status code, with response optional data
 
 #### `respondNoContent(?array $data = [])`
 
-Returns a `204` HTTP status code, with response optional data. Technically the response body should be empty. However, functionality to optionally return data was added to handle legacy projects.
+Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()` 
 
 ## Motivation
 
