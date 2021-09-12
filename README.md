@@ -23,7 +23,7 @@ A simple package allowing for consistent API responses throughout your Laravel a
 
 Simply reference the required trait in your controller:
 
-```
+```php
 <?php
 
 namespace App\Http\Api\Controllers;
