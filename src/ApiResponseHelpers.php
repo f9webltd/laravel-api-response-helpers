@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace F9Web;
 
 use Exception;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
+use JsonSerializable;
 use Symfony\Component\HttpFoundation\Response;
 
 use function response;
@@ -32,8 +34,17 @@ trait ApiResponseHelpers
         );
     }
 
-    public function respondWithSuccess(?array $contents = []): JsonResponse
+    /**
+     * @param array|Arrayable|JsonSerializable|null $contents
+     */
+    public function respondWithSuccess($contents = []): JsonResponse
     {
+        if ($contents instanceof Arrayable) {
+            $contents = $contents->toArray();
+        } elseif ($contents instanceof JsonSerializable) {
+            $contents = $contents->jsonSerialize();
+        }
+
         $data = [] === $contents
             ? ['success' => true]
             : $contents;
@@ -70,8 +81,17 @@ trait ApiResponseHelpers
         );
     }
 
-    public function respondCreated(?array $data = []): JsonResponse
+    /**
+     * @param array|Arrayable|JsonSerializable|null $data
+     */
+    public function respondCreated($data = []): JsonResponse
     {
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        } elseif ($data instanceof JsonSerializable) {
+            $data = $data->jsonSerialize();
+        }
+
         return $this->apiResponse($data, Response::HTTP_CREATED);
     }
     
@@ -102,9 +122,18 @@ trait ApiResponseHelpers
           Response::HTTP_I_AM_A_TEAPOT
         );
     }
-    
-    public function respondNoContent(?array $data = []): JsonResponse
+
+    /**
+     * @param array|Arrayable|JsonSerializable|null $data
+     */
+    public function respondNoContent($data = []): JsonResponse
     {
+        if ($data instanceof Arrayable) {
+            $data = $data->toArray();
+        } elseif ($data instanceof JsonSerializable) {
+            $data = $data->jsonSerialize();
+        }
+
         return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
     }
 
