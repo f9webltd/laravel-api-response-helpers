@@ -23,53 +23,51 @@ class ResponseTest extends TestCase
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondNotFound('Ouch!');
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"error":"Ouch!"}', $response->getContent());
-        self::assertEquals(['error' => 'Ouch!'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_NOT_FOUND;
+		$expected_response['json'] = ['error' => 'Ouch!'];
+		$this->testResponse($expected_response, $response);
 
         $response = $this->service->respondNotFound(new DomainException('Unknown model'));
-        self::assertJsonStringEqualsJsonString('{"error":"Unknown model"}', $response->getContent());
-        self::assertEquals(['error' => 'Unknown model'], $response->getData(true));
+		$expected_response['status_code'] = null;
+		$expected_response['json'] = ['error' => 'Unknown model'];
+		$this->testResponse($expected_response, $response);
 
         $response = $this->service->respondNotFound('Ouch!', 'nope');
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertJsonStringEqualsJsonString('{"nope":"Ouch!"}', $response->getContent());
-        self::assertEquals(['nope' => 'Ouch!'], $response->getData(true));
+		$expected_response['json'] = ['nope' => 'Ouch!'];
+		$this->testResponse($expected_response, $response);
     }
 
     public function testRespondWithSuccess(): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondWithSuccess();
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"success":true}', $response->getContent());
-        self::assertEquals(['success' => true], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_OK;
+		$expected_response['json'] = ['success' => true];
+		$this->testResponse($expected_response, $response);
 
         $response = $this->service->respondWithSuccess(['super' => 'response', 'yes' => 123]);
-        self::assertJsonStringEqualsJsonString('{"super":"response","yes":123}', $response->getContent());
-        self::assertEquals(['super' => 'response', 'yes' => 123], $response->getData(true));
+		$expected_response['status_code'] = null;
+		$expected_response['json'] = ['super' => 'response', 'yes' => 123];
+		$this->testResponse($expected_response, $response);
     }
 
     public function testRespondOk(): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondOk('Record updated');
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"success":"Record updated"}', $response->getContent());
-        self::assertEquals(['success' => 'Record updated'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_OK;
+		$expected_response['json'] = ['success' => 'Record updated'];
+		$this->testResponse($expected_response, $response);
     }
 
     public function testRespondUnAuthenticated(): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondUnAuthenticated();
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_UNAUTHORIZED, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"error":"Unauthenticated"}', $response->getContent());
-        self::assertEquals(['error' => 'Unauthenticated'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_UNAUTHORIZED;
+		$expected_response['json'] = ['error' => 'Unauthenticated'];
+		$this->testResponse($expected_response, $response);
+		
 
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondUnAuthenticated('Not allowed');
@@ -80,10 +78,9 @@ class ResponseTest extends TestCase
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondForbidden();
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"error":"Forbidden"}', $response->getContent());
-        self::assertEquals(['error' => 'Forbidden'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_FORBIDDEN;
+		$expected_response['json'] = ['error' => 'Forbidden'];
+		$this->testResponse($expected_response, $response);
 
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondForbidden('No way');
@@ -94,10 +91,9 @@ class ResponseTest extends TestCase
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondError();
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"error":"Error"}', $response->getContent());
-        self::assertEquals(['error' => 'Error'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_BAD_REQUEST;
+		$expected_response['json'] = ['error' => 'Error'];
+		$this->testResponse($expected_response, $response);
 
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondError('Error ...');
@@ -108,34 +104,44 @@ class ResponseTest extends TestCase
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondCreated();
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('[]', $response->getContent());
-        self::assertEquals([], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_CREATED;
+		$expected_response['json'] = [];
+		$this->testResponse($expected_response, $response);
     }
 
     public function testRespondFailedValidation(): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondFailedValidation('Password is required');
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"message":"Password is required"}', $response->getContent());
-        self::assertEquals(['message' => 'Password is required'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_UNPROCESSABLE_ENTITY;
+		$expected_response['json'] = ['message' => 'Password is required'];
+		$this->testResponse($expected_response, $response);
 
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondFailedValidation('Password is required', 'erm');
-        self::assertJsonStringEqualsJsonString('{"erm":"Password is required"}', $response->getContent());
-        self::assertEquals(['erm' => 'Password is required'], $response->getData(true));
+		$expected_response['status_code'] = null;
+		$expected_response['json'] = ['erm' => 'Password is required'];
+		$this->testResponse($expected_response, $response);
     }
 
     public function testRespondTeapot(): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondTeapot();
-        self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals(Response::HTTP_I_AM_A_TEAPOT, $response->getStatusCode());
-        self::assertJsonStringEqualsJsonString('{"message":"I\'m a teapot"}', $response->getContent());
-        self::assertEquals(['message' => 'I\'m a teapot'], $response->getData(true));
+		$expected_response['status_code'] = Response::HTTP_I_AM_A_TEAPOT;
+		$expected_response['json'] = ['message' => 'I\'m a teapot'];
+		$this->testResponse($expected_response, $response);
     }
+
+	private function testResponse($expected_response, $response): void
+	{
+		self::assertInstanceOf(JsonResponse::class, $response);
+		if ($expected_response['status_code'] !== null) {
+			self::assertEquals($expected_response['status_code'], $response->getStatusCode());
+		}
+		if ($expected_response['json'] !== null) {
+			self::assertJsonStringEqualsJsonString(json_encode($expected_response['json']), $response->getContent());
+			self::assertEquals($expected_response['json'], $response->getData(true));
+		}
+	}
 }
