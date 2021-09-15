@@ -133,7 +133,7 @@ class ResponseTest extends TestCase
 		$this->testResponse($expected_response, $response);
     }
 
-	private function testResponse($expected_response, $response): void
+	public function testResponse($expected_response, $response): void
 	{
 		self::assertInstanceOf(JsonResponse::class, $response);
 		if ($expected_response['status_code'] !== null) {
