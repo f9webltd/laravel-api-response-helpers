@@ -39,11 +39,7 @@ trait ApiResponseHelpers
      */
     public function respondWithSuccess($contents = []): JsonResponse
     {
-        if ($contents instanceof Arrayable) {
-            $contents = $contents->toArray();
-        } elseif ($contents instanceof JsonSerializable) {
-            $contents = $contents->jsonSerialize();
-        }
+        $contents = $this->normalizedArray($contents);
 
         $data = [] === $contents
             ? ['success' => true]
@@ -86,11 +82,7 @@ trait ApiResponseHelpers
      */
     public function respondCreated($data = []): JsonResponse
     {
-        if ($data instanceof Arrayable) {
-            $data = $data->toArray();
-        } elseif ($data instanceof JsonSerializable) {
-            $data = $data->jsonSerialize();
-        }
+        $data = $this->normalizedArray($data);
 
         return $this->apiResponse($data, Response::HTTP_CREATED);
     }
@@ -128,11 +120,7 @@ trait ApiResponseHelpers
      */
     public function respondNoContent($data = []): JsonResponse
     {
-        if ($data instanceof Arrayable) {
-            $data = $data->toArray();
-        } elseif ($data instanceof JsonSerializable) {
-            $data = $data->jsonSerialize();
-        }
+        $data = $this->normalizedArray($data);
 
         return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
     }
@@ -140,5 +128,21 @@ trait ApiResponseHelpers
     private function apiResponse(array $data, int $code = 200): JsonResponse
     {
         return response()->json($data, $code);
+    }
+
+    /**
+     * @param array|Arrayable|JsonSerializable|null $data
+     * @return array|null
+     */
+    private function normalizedArray($data) {
+        if ($data instanceof Arrayable) {
+            return $data->toArray();
+        }
+
+        if ($data instanceof JsonSerializable) {
+            return $data->jsonSerialize();
+        }
+
+        return $data;
     }
 }
