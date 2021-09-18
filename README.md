@@ -21,7 +21,7 @@ A simple package allowing for consistent API responses throughout your Laravel a
 `composer require f9webltd/laravel-api-response-helpers`
 
 
-Simply reference the required trait in your controller:
+Simply reference the required trait within your controller:
 
 ```php
 <?php
@@ -48,7 +48,7 @@ Optionally, the trait could be imported within a base controller.
 
 #### `respondNotFound(string|Exception $message, ?string $key = 'error')`
 
-Returns a `404` HTTP status code, an excpetion object can optionally be passed.
+Returns a `404` HTTP status code, an exception object can optionally be passed.
 
 #### `respondWithSuccess(array|Arrayable|JsonSerializable|null $contents = [])`
 
@@ -77,6 +77,22 @@ Returns a `201` HTTP status code, with response optional data
 #### `respondNoContent(array|Arrayable|JsonSerializable|null $data = [])`
 
 Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()` 
+
+## Additional Data Types
+
+In addition to a plain PHP `array`, the following data types can be passed to relevant methods:
+
+- Objects implementing the Laravel `Illuminate\Contracts\Support\Arrayable` contract
+- Objects implementing the native PHP `JsonSerializable` contract
+
+This allows a variety of object types to be passed and converted automatically.
+
+Some example objects that can be passed (there are a lot more):
+
+- `Illuminate\Support\Collection` (i.e. [Collections](https://laravel.com/docs/8.x/collections))
+- `Illuminate\Database\Eloquent`  (i.e. [Eloquent collections](https://laravel.com/docs/8.x/eloquent-collections))
+- `Illuminate\Http\Resources\Json\JsonResource` (i.e. [Laravel API resources](https://laravel.com/docs/8.x/eloquent-resources))
+- `Illuminate\Foundation\Http\FormRequest`
 
 ## Motivation
 

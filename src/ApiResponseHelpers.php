@@ -24,12 +24,8 @@ trait ApiResponseHelpers
         $message,
         ?string $key = 'error'
     ): JsonResponse {
-        $message = $message instanceof Exception
-            ? $message->getMessage()
-            : $message;
-
         return $this->apiResponse(
-            [$key => $message],
+            [$key => $this->morphMessage($message)],
             Response::HTTP_NOT_FOUND
         );
     }
@@ -82,9 +78,10 @@ trait ApiResponseHelpers
      */
     public function respondCreated($data = []): JsonResponse
     {
-        $data = $this->morphToArray($data);
-
-        return $this->apiResponse($data, Response::HTTP_CREATED);
+        return $this->apiResponse(
+          $this->morphToArray($data),
+          Response::HTTP_CREATED
+        );
     }
     
     /**
@@ -97,12 +94,8 @@ trait ApiResponseHelpers
         $message,
         ?string $key = 'message'
     ): JsonResponse {
-        $message = $message instanceof Exception
-            ? $message->getMessage()
-            : $message;
-
         return $this->apiResponse(
-            [$key => $message ?? 'Validation errors'],
+            [$key => $this->morphMessage($message)],
             Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
@@ -145,5 +138,16 @@ trait ApiResponseHelpers
         }
 
         return $data;
+    }
+
+    /**
+     * @param string|\Exception $message
+     * @return string
+     */
+    private function morphMessage($message): string
+    {
+        return $message instanceof Exception
+          ? $message->getMessage()
+          : $message;
     }
 }

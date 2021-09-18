@@ -138,6 +138,11 @@ class ResponseTest extends TestCase
         self::assertEquals(['message' => 'Password is required'], $response->getData(true));
 
         /** @var \Illuminate\Http\JsonResponse $response */
+        $response = $this->service->respondFailedValidation(new DomainException('Bad things happening ...'));
+        self::assertJsonStringEqualsJsonString('{"message":"Bad things happening ..."}', $response->getContent());
+        self::assertEquals(['message' => 'Bad things happening ...'], $response->getData(true));
+
+        /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondFailedValidation('Password is required', 'erm');
         self::assertJsonStringEqualsJsonString('{"erm":"Password is required"}', $response->getContent());
         self::assertEquals(['erm' => 'Password is required'], $response->getData(true));
