@@ -39,7 +39,7 @@ trait ApiResponseHelpers
      */
     public function respondWithSuccess($contents = []): JsonResponse
     {
-        $contents = $this->normalizedArray($contents);
+        $contents = $this->morphToArray($contents);
 
         $data = [] === $contents
             ? ['success' => true]
@@ -82,7 +82,7 @@ trait ApiResponseHelpers
      */
     public function respondCreated($data = []): JsonResponse
     {
-        $data = $this->normalizedArray($data);
+        $data = $this->morphToArray($data);
 
         return $this->apiResponse($data, Response::HTTP_CREATED);
     }
@@ -120,7 +120,7 @@ trait ApiResponseHelpers
      */
     public function respondNoContent($data = []): JsonResponse
     {
-        $data = $this->normalizedArray($data);
+        $data = $this->morphToArray($data);
 
         return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
     }
@@ -134,7 +134,8 @@ trait ApiResponseHelpers
      * @param array|Arrayable|JsonSerializable|null $data
      * @return array|null
      */
-    private function normalizedArray($data) {
+    private function morphToArray($data)
+    {
         if ($data instanceof Arrayable) {
             return $data->toArray();
         }

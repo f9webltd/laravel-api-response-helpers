@@ -125,6 +125,7 @@ class ResponseTest extends TestCase
         $response = $this->service->respondCreated(new Collection([ 'id' => 123, 'title' => 'ABC' ]));
         self::assertJsonStringEqualsJsonString('{"id":123,"title":"ABC"}', $response->getContent());
         self::assertEquals([ 'id' => 123, 'title' => 'ABC' ], $response->getData(true));
+        self::assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
     }
 
     public function testRespondFailedValidation(): void
