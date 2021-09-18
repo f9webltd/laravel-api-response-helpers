@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace F9Web\ApiResponseHelpers\Tests;
 
-use DomainException;
 use F9Web\ApiResponseHelpers;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
+use JsonException;
+use DomainException;
+use Illuminate\Support\Collection;
+
+use function json_encode;
 
 class ResponseTest extends TestCase
 {
@@ -20,134 +23,181 @@ class ResponseTest extends TestCase
         parent::setUp();
     }
 
-    public function testRespondNotFound(): void
+    /**
+     * @dataProvider basicResponsesDataProvider
+     * @throws JsonException
+     */
+    public function testResponses(string $method, array $args, int $code, array $data): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondNotFound('Ouch!');
-		$expected_response['status_code'] = Response::HTTP_NOT_FOUND;
-		$expected_response['json'] = ['error' => 'Ouch!'];
-		$this->assertResponse($expected_response, $response);
-
-        $response = $this->service->respondNotFound(new DomainException('Unknown model'));
-		$expected_response['status_code'] = null;
-		$expected_response['json'] = ['error' => 'Unknown model'];
-		$this->assertResponse($expected_response, $response);
-
-        $response = $this->service->respondNotFound('Ouch!', 'nope');
-		$expected_response['json'] = ['nope' => 'Ouch!'];
-		$this->assertResponse($expected_response, $response);
+        $response = call_user_func_array([$this->service, $method], $args);
+        self::assertInstanceOf(JsonResponse::class, $response);
+        self::assertEquals($code, $response->getStatusCode());
+        self::assertEquals($data, $response->getData(true));
+        self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
-    public function testRespondWithSuccess(): void
+    public function basicResponsesDataProvider(): array
     {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondWithSuccess();
-		$expected_response['status_code'] = Response::HTTP_OK;
-		$expected_response['json'] = ['success' => true];
-		$this->assertResponse($expected_response, $response);
+        return [
+          'respondNotFound()' => [
+            'respondNotFound',
+            ['Ouch'],
+            Response::HTTP_NOT_FOUND,
+            ['error' => 'Ouch'],
+          ],
 
-        $response = $this->service->respondWithSuccess(['super' => 'response', 'yes' => 123]);
-		$expected_response['status_code'] = null;
-		$expected_response['json'] = ['super' => 'response', 'yes' => 123];
-		$this->assertResponse($expected_response, $response);
+          'respondNotFound() with custom key' => [
+            'respondNotFound',
+            ['Ouch', 'message'],
+            Response::HTTP_NOT_FOUND,
+            ['message' => 'Ouch'],
+          ],
+
+          'respondNotFound() with exception and custom key' => [
+            'respondNotFound',
+            [
+              new DomainException('Unknown model'),
+              'message'
+            ],
+            Response::HTTP_NOT_FOUND,
+            ['message' => 'Unknown model'],
+          ],
+
+          'respondWithSuccess(), default response data' => [
+            'respondWithSuccess',
+            [],
+            Response::HTTP_OK,
+            ['success' => true],
+          ],
+
+          'respondWithSuccess(), custom response data' => [
+            'respondWithSuccess',
+            [['order' => 237]],
+            Response::HTTP_OK,
+            ['order' => 237],
+          ],
+
+          'respondWithSuccess(), nested custom response data' => [
+            'respondWithSuccess',
+            [['order' => 237, 'customer' => ['name' => 'Jason Bourne']]],
+            Response::HTTP_OK,
+            ['order' => 237, 'customer' => ['name' => 'Jason Bourne']],
+          ],
+
+          'respondWithSuccess(), collection' => [
+            'respondWithSuccess',
+            [new Collection(['invoice' => 23, 'status' => 'pending'])],
+            Response::HTTP_OK,
+            ['invoice' => 23, 'status' => 'pending'],
+          ],
+
+          'respondOk()' => [
+            'respondOk',
+            ['Order accepted'],
+            Response::HTTP_OK,
+            ['success' => 'Order accepted'],
+          ],
+
+          'respondUnAuthenticated(), default message' => [
+            'respondUnAuthenticated',
+            [],
+            Response::HTTP_UNAUTHORIZED,
+            ['error' => 'Unauthenticated'],
+          ],
+
+          'respondUnAuthenticated(), custom message' => [
+            'respondUnAuthenticated',
+            ['Denied'],
+            Response::HTTP_UNAUTHORIZED,
+            ['error' => 'Denied'],
+          ],
+
+          'respondForbidden(), default message' => [
+            'respondForbidden',
+            [],
+            Response::HTTP_FORBIDDEN,
+            ['error' => 'Forbidden'],
+          ],
+
+          'respondForbidden(), custom message' => [
+            'respondForbidden',
+            ['Disavowed'],
+            Response::HTTP_FORBIDDEN,
+            ['error' => 'Disavowed'],
+          ],
+
+          'respondError(), default message' => [
+            'respondError',
+            [],
+            Response::HTTP_BAD_REQUEST,
+            ['error' => 'Error'],
+          ],
+
+          'respondError(), custom message' => [
+            'respondError',
+            ['Order tampering detected'],
+            Response::HTTP_BAD_REQUEST,
+            ['error' => 'Order tampering detected'],
+          ],
+
+          'respondCreated()' => [
+            'respondCreated',
+            [],
+            Response::HTTP_CREATED,
+            [],
+          ],
+
+          'respondCreated() with response data' => [
+            'respondCreated',
+            [['user' => ['name' => 'Jet Li']]],
+            Response::HTTP_CREATED,
+            ['user' => ['name' => 'Jet Li']],
+          ],
+
+          'respondCreated(), with collection as response' => [
+            'respondCreated',
+            [new Collection(['invoice' => 23, 'status' => 'pending'])],
+            Response::HTTP_CREATED,
+            ['invoice' => 23, 'status' => 'pending'],
+          ],
+
+          'respondFailedValidation()' => [
+            'respondFailedValidation',
+            ['An invoice is required'],
+            Response::HTTP_UNPROCESSABLE_ENTITY,
+            ['message' => 'An invoice is required'],
+          ],
+
+          'respondTeapot()' => [
+            'respondTeapot',
+            [],
+            Response::HTTP_I_AM_A_TEAPOT,
+            ['message' => 'I\'m a teapot'],
+          ],
+
+          'respondNoContent()' => [
+            'respondNoContent',
+            [],
+            Response::HTTP_NO_CONTENT,
+            [],
+          ],
+
+          // @see https://github.com/f9webltd/laravel-api-response-helpers/issues/5#issuecomment-917418285
+          'respondNoContent() with data' => [
+            'respondNoContent',
+            [['role' => 'manager']],
+            Response::HTTP_NO_CONTENT,
+            ['role' => 'manager'],
+          ],
+
+          // @see https://github.com/f9webltd/laravel-api-response-helpers/issues/5#issuecomment-917418285
+          'respondNoContent(), with collection as response' => [
+            'respondNoContent',
+            [new Collection(['invoice' => 23, 'status' => 'pending'])],
+            Response::HTTP_NO_CONTENT,
+            ['invoice' => 23, 'status' => 'pending'],
+          ],
+        ];
     }
-
-    public function testRespondOk(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondOk('Record updated');
-		$expected_response['status_code'] = Response::HTTP_OK;
-		$expected_response['json'] = ['success' => 'Record updated'];
-		$this->assertResponse($expected_response, $response);
-    }
-
-    public function testRespondUnAuthenticated(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondUnAuthenticated();
-		$expected_response['status_code'] = Response::HTTP_UNAUTHORIZED;
-		$expected_response['json'] = ['error' => 'Unauthenticated'];
-		$this->assertResponse($expected_response, $response);
-
-
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondUnAuthenticated('Not allowed');
-        self::assertEquals(['error' => 'Not allowed'], $response->getData(true));
-    }
-
-    public function testRespondForbidden(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondForbidden();
-		$expected_response['status_code'] = Response::HTTP_FORBIDDEN;
-		$expected_response['json'] = ['error' => 'Forbidden'];
-		$this->assertResponse($expected_response, $response);
-
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondForbidden('No way');
-        self::assertEquals(['error' => 'No way'], $response->getData(true));
-    }
-
-    public function testRespondError(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondError();
-		$expected_response['status_code'] = Response::HTTP_BAD_REQUEST;
-		$expected_response['json'] = ['error' => 'Error'];
-		$this->assertResponse($expected_response, $response);
-
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondError('Error ...');
-        self::assertEquals(['error' => 'Error ...'], $response->getData(true));
-    }
-
-    public function testRespondCreated(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondCreated();
-		$expected_response['status_code'] = Response::HTTP_CREATED;
-		$expected_response['json'] = [];
-		$this->assertResponse($expected_response, $response);
-    }
-
-    public function testRespondFailedValidation(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondFailedValidation('Password is required');
-		$expected_response['status_code'] = Response::HTTP_UNPROCESSABLE_ENTITY;
-		$expected_response['json'] = ['message' => 'Password is required'];
-		$this->assertResponse($expected_response, $response);
-
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondFailedValidation(new DomainException('Bad things happening ...'));
-        self::assertJsonStringEqualsJsonString('{"message":"Bad things happening ..."}', $response->getContent());
-        self::assertEquals(['message' => 'Bad things happening ...'], $response->getData(true));
-
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondFailedValidation('Password is required', 'erm');
-		$expected_response['status_code'] = null;
-		$expected_response['json'] = ['erm' => 'Password is required'];
-		$this->assertResponse($expected_response, $response);
-    }
-
-    public function testRespondTeapot(): void
-    {
-        /** @var \Illuminate\Http\JsonResponse $response */
-        $response = $this->service->respondTeapot();
-		$expected_response['status_code'] = Response::HTTP_I_AM_A_TEAPOT;
-		$expected_response['json'] = ['message' => 'I\'m a teapot'];
-		$this->assertResponse($expected_response, $response);
-    }
-
-	public function assertResponse($expected_response, $response): void
-	{
-		self::assertInstanceOf(JsonResponse::class, $response);
-		if ($expected_response['status_code'] !== null) {
-			self::assertEquals($expected_response['status_code'], $response->getStatusCode());
-		}
-		if ($expected_response['json'] !== null) {
-			self::assertJsonStringEqualsJsonString(json_encode($expected_response['json']), $response->getContent());
-			self::assertEquals($expected_response['json'], $response->getData(true));
-		}
-	}
 }
