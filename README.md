@@ -76,9 +76,9 @@ Returns a `201` HTTP status code, with response optional data
 
 #### `respondNoContent(array|Arrayable|JsonSerializable|null $data = [])`
 
-Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()` 
+Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()`
 
-## Additional Data Types
+## Use with additional object types
 
 In addition to a plain PHP `array`, the following data types can be passed to relevant methods:
 
@@ -87,12 +87,33 @@ In addition to a plain PHP `array`, the following data types can be passed to re
 
 This allows a variety of object types to be passed and converted automatically.
 
-Some example objects that can be passed (there are a lot more):
+Below are a few common object types that can be passed.
 
-- `Illuminate\Support\Collection` (i.e. [Collections](https://laravel.com/docs/8.x/collections))
-- `Illuminate\Database\Eloquent`  (i.e. [Eloquent collections](https://laravel.com/docs/8.x/eloquent-collections))
-- `Illuminate\Http\Resources\Json\JsonResource` (i.e. [Laravel API resources](https://laravel.com/docs/8.x/eloquent-resources))
-- `Illuminate\Foundation\Http\FormRequest`
+#### Laravel Collections - `Illuminate\Support\Collection`
+
+```php
+$users = collect([10, 20, 30, 40]);
+
+return $this->respondWithSuccess($users);
+```
+
+#### Laravel Eloquent Collections - `Illuminate\Database\Eloquent\Collection`
+
+```php
+$invoices = Invoice::pending()->get();
+
+return $this->respondWithSuccess($invoices);
+```
+
+#### Laravel API Resources - `Illuminate\Http\Resources\Json\JsonResource`
+
+This package is intended to be used **alongside** Laravel's  [API resources](https://laravel.com/docs/8.x/eloquent-resources) and in no way replaces them.
+
+```php
+$resource = PostResource::make($post);
+
+return $this->respondCreated($resource);
+```
 
 ## Motivation
 
@@ -107,12 +128,6 @@ Ensure consistent JSON API responses throughout an application. The motivation w
 I wanted to add a simple trait that kept this consistent, in this case:
 
 `$this->respondError('Ouch')`
-
-This package is intended to be used **alongside** Laravel's  [API resources](https://laravel.com/docs/8.x/eloquent-resources) and in no way replaces them:
-
-```php
-$this->respondCreated(PostResource::make($post));
-```
 
 ## Contribution
 
