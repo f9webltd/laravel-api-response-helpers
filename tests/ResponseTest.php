@@ -7,6 +7,7 @@ namespace F9Web\ApiResponseHelpers\Tests;
 use DomainException;
 use F9Web\ApiResponseHelpers;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseTest extends TestCase
@@ -116,6 +117,11 @@ class ResponseTest extends TestCase
 		$expected_response['status_code'] = Response::HTTP_UNPROCESSABLE_ENTITY;
 		$expected_response['json'] = ['message' => 'Password is required'];
 		$this->testResponse($expected_response, $response);
+
+        /** @var \Illuminate\Http\JsonResponse $response */
+        $response = $this->service->respondFailedValidation(new DomainException('Bad things happening ...'));
+        self::assertJsonStringEqualsJsonString('{"message":"Bad things happening ..."}', $response->getContent());
+        self::assertEquals(['message' => 'Bad things happening ...'], $response->getData(true));
 
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->respondFailedValidation('Password is required', 'erm');
