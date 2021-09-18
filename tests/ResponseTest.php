@@ -7,6 +7,7 @@ namespace F9Web\ApiResponseHelpers\Tests;
 use DomainException;
 use F9Web\ApiResponseHelpers;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseTest extends TestCase
@@ -48,6 +49,10 @@ class ResponseTest extends TestCase
         self::assertEquals(['success' => true], $response->getData(true));
 
         $response = $this->service->respondWithSuccess(['super' => 'response', 'yes' => 123]);
+        self::assertJsonStringEqualsJsonString('{"super":"response","yes":123}', $response->getContent());
+        self::assertEquals(['super' => 'response', 'yes' => 123], $response->getData(true));
+
+        $response = $this->service->respondWithSuccess(new Collection(['super' => 'response', 'yes' => 123]));
         self::assertJsonStringEqualsJsonString('{"super":"response","yes":123}', $response->getContent());
         self::assertEquals(['super' => 'response', 'yes' => 123], $response->getData(true));
     }
@@ -112,6 +117,15 @@ class ResponseTest extends TestCase
         self::assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         self::assertJsonStringEqualsJsonString('[]', $response->getContent());
         self::assertEquals([], $response->getData(true));
+
+        $response = $this->service->respondCreated([ 'id' => 123, 'title' => 'ABC' ]);
+        self::assertJsonStringEqualsJsonString('{"id":123,"title":"ABC"}', $response->getContent());
+        self::assertEquals([ 'id' => 123, 'title' => 'ABC' ], $response->getData(true));
+
+        $response = $this->service->respondCreated(new Collection([ 'id' => 123, 'title' => 'ABC' ]));
+        self::assertJsonStringEqualsJsonString('{"id":123,"title":"ABC"}', $response->getContent());
+        self::assertEquals([ 'id' => 123, 'title' => 'ABC' ], $response->getData(true));
+        self::assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
     }
 
     public function testRespondFailedValidation(): void

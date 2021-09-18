@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace F9Web;
 
 use Exception;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
+use JsonSerializable;
 use Symfony\Component\HttpFoundation\Response;
 
 use function response;
@@ -32,8 +34,13 @@ trait ApiResponseHelpers
         );
     }
 
-    public function respondWithSuccess(?array $contents = []): JsonResponse
+    /**
+     * @param array|Arrayable|JsonSerializable|null $contents
+     */
+    public function respondWithSuccess($contents = []): JsonResponse
     {
+        $contents = $this->morphToArray($contents);
+
         $data = [] === $contents
             ? ['success' => true]
             : $contents;
@@ -70,8 +77,13 @@ trait ApiResponseHelpers
         );
     }
 
-    public function respondCreated(?array $data = []): JsonResponse
+    /**
+     * @param array|Arrayable|JsonSerializable|null $data
+     */
+    public function respondCreated($data = []): JsonResponse
     {
+        $data = $this->morphToArray($data);
+
         return $this->apiResponse($data, Response::HTTP_CREATED);
     }
     
@@ -102,14 +114,36 @@ trait ApiResponseHelpers
           Response::HTTP_I_AM_A_TEAPOT
         );
     }
-    
-    public function respondNoContent(?array $data = []): JsonResponse
+
+    /**
+     * @param array|Arrayable|JsonSerializable|null $data
+     */
+    public function respondNoContent($data = []): JsonResponse
     {
+        $data = $this->morphToArray($data);
+
         return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
     }
 
     private function apiResponse(array $data, int $code = 200): JsonResponse
     {
         return response()->json($data, $code);
+    }
+
+    /**
+     * @param array|Arrayable|JsonSerializable|null $data
+     * @return array|null
+     */
+    private function morphToArray($data)
+    {
+        if ($data instanceof Arrayable) {
+            return $data->toArray();
+        }
+
+        if ($data instanceof JsonSerializable) {
+            return $data->jsonSerialize();
+        }
+
+        return $data;
     }
 }
