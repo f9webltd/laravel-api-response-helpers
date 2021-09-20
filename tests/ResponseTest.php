@@ -10,6 +10,9 @@ use Symfony\Component\HttpFoundation\Response;
 use JsonException;
 use DomainException;
 use Illuminate\Support\Collection;
+use F9Web\ApiResponseHelpers\Tests\Models\User;
+use F9Web\ApiResponseHelpers\Tests\Resources\UserResource;
+use Illuminate\Database\Eloquent\Collection As EloquentCollection;
 
 use function json_encode;
 
@@ -160,6 +163,53 @@ class ResponseTest extends TestCase
             [new Collection(['invoice' => 23, 'status' => 'pending'])],
             Response::HTTP_CREATED,
             ['invoice' => 23, 'status' => 'pending'],
+          ],
+
+          'respondCreated(), with eloquent collection as response' => [
+            'respondCreated',
+            [
+              new EloquentCollection([
+                new User(['name' => 'Jet Li', 'age' => 58]),
+                new User(['name' => 'Chow Yun-Fat', 'age' => 66]),
+                new User(['name' => 'Donnie Yen', 'age' => 58])
+              ])
+            ],
+            Response::HTTP_CREATED,
+            [
+              ['name' => 'Jet Li', 'age' => 58],
+              ['name' => 'Chow Yun-Fat', 'age' => 66],
+              ['name' => 'Donnie Yen', 'age' => 58]
+            ],
+          ],
+
+          'respondCreated(), with json resource as response' => [
+            'respondCreated',
+            [
+              new UserResource(
+                new User(['name' => 'Jet Li', 'age' => 58])
+              )
+            ],
+            Response::HTTP_CREATED,
+            ['nameAndAge' => 'Jet Li & 58'],
+          ],
+
+          'respondCreated(), with resource collection as response' => [
+            'respondCreated',
+            [
+              UserResource::collection(
+                new EloquentCollection([
+                  new User(['name' => 'Jet Li', 'age' => 58]),
+                  new User(['name' => 'Chow Yun-Fat', 'age' => 66]),
+                  new User(['name' => 'Donnie Yen', 'age' => 58])
+                ])
+              )
+            ],
+            Response::HTTP_CREATED,
+            [
+              ['nameAndAge' => 'Jet Li & 58'],
+              ['nameAndAge' => 'Chow Yun-Fat & 66'],
+              ['nameAndAge' => 'Donnie Yen & 58']
+            ],
           ],
 
           'respondFailedValidation()' => [
