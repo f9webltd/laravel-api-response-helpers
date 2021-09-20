@@ -39,7 +39,7 @@ trait ApiResponseHelpers
 
         $data = [] === $contents
             ? ['success' => true]
-            : $contents;
+            : array_merge(['success' => true], $contents);
 
         return $this->apiResponse($data);
     }
