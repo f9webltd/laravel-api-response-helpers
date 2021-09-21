@@ -71,25 +71,39 @@ class ResponseTest extends TestCase
             ['success' => true],
           ],
 
+          'respondWithSuccess(), custom success value' => [
+            'respondWithSuccess',
+            [['success' => 'maybe']],
+            Response::HTTP_OK,
+            ['success' => 'maybe'],
+          ],
+
           'respondWithSuccess(), custom response data' => [
             'respondWithSuccess',
             [['order' => 237]],
             Response::HTTP_OK,
-            ['order' => 237],
+            ['success' => true, 'order' => 237],
+          ],
+
+          'respondWithSuccess(), custom response data and custom success value' => [
+            'respondWithSuccess',
+            [['success' => 'maybe', 'order' => 237]],
+            Response::HTTP_OK,
+            ['success' => 'maybe', 'order' => 237],
           ],
 
           'respondWithSuccess(), nested custom response data' => [
             'respondWithSuccess',
             [['order' => 237, 'customer' => ['name' => 'Jason Bourne']]],
             Response::HTTP_OK,
-            ['order' => 237, 'customer' => ['name' => 'Jason Bourne']],
+            ['success' => true, 'order' => 237, 'customer' => ['name' => 'Jason Bourne']],
           ],
 
           'respondWithSuccess(), collection' => [
             'respondWithSuccess',
             [new Collection(['invoice' => 23, 'status' => 'pending'])],
             Response::HTTP_OK,
-            ['invoice' => 23, 'status' => 'pending'],
+            ['success' => true, 'invoice' => 23, 'status' => 'pending'],
           ],
 
           'respondOk()' => [
