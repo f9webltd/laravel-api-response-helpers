@@ -36,7 +36,7 @@
     }
   },
   "scripts": {
-    "test": "./vendor/bin/phpunit --color=always ./tests"
+    "test": "./vendor/bin/phpunit"
   },
   "config": {
     "sort-packages": true
