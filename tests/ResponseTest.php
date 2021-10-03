@@ -41,6 +41,19 @@ class ResponseTest extends TestCase
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
+    /**
+     * @dataProvider successDefaultsDataProvider
+     * @throws JsonException
+     */
+    public function testSuccessResponseDefaults(?array $default, $args, int $code, array $data): void
+    {
+        $response = $this->service->setDefaultSuccessResponse($default)->respondWithSuccess($args);
+        self::assertInstanceOf(JsonResponse::class, $response);
+        self::assertSame($code, $response->getStatusCode());
+        self::assertSame($data, $response->getData(true));
+        self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
+    }
+
     public function basicResponsesDataProvider(): array
     {
         return [
@@ -319,6 +332,42 @@ class ResponseTest extends TestCase
             Response::HTTP_NO_CONTENT,
             ['invoice' => 23, 'status' => 'pending'],
           ],
+        ];
+    }
+
+    public function successDefaultsDataProvider(): array
+    {
+        return [
+            'respondWithSuccess(), default empty array' => [
+                'default' => [],
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithSuccess(), default null' => [
+                'default' => null,
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithSuccess(), default null, null response' => [
+                'default' => null,
+                'args' => null,
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithSuccess(), default non-empty array' => [
+                'default' => ['message' => 'Task successful!'],
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => ['message' => 'Task successful!'],
+            ],
+            'respondWithSuccess(), default non-empty array, custom response data' => [
+                'default' => ['message' => 'Task successful!'],
+                'args' => ['numbers' => [1, 2, 3]],
+                'code' => Response::HTTP_OK,
+                'data' => ['numbers' => [1, 2, 3]],
+            ]
         ];
     }
 }

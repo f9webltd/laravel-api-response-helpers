@@ -14,6 +14,9 @@ use function response;
 
 trait ApiResponseHelpers
 {
+
+    private ?array $_api_helpers_defaultSuccessData = ['success' => true];
+
     /**
      * @param string|\Exception $message
      * @param  string|null  $key
@@ -38,10 +41,16 @@ trait ApiResponseHelpers
         $contents = $this->morphToArray($contents) ?? [];
 
         $data = [] === $contents
-            ? ['success' => true]
+            ? $this->_api_helpers_defaultSuccessData
             : $contents;
 
         return $this->apiResponse($data);
+    }
+
+    public function setDefaultSuccessResponse(?array $content = null)
+    {
+        $this->_api_helpers_defaultSuccessData = $content ?? [];
+        return $this;
     }
 
     public function respondOk(string $message): JsonResponse
