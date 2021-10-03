@@ -36,8 +36,8 @@ class ResponseTest extends TestCase
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = call_user_func_array([$this->service, $method], $args);
         self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals($code, $response->getStatusCode());
-        self::assertEquals($data, $response->getData(true));
+        self::assertSame($code, $response->getStatusCode());
+        self::assertSame($data, $response->getData(true));
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
