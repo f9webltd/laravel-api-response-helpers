@@ -235,6 +235,13 @@ class ResponseTest extends TestCase
             [],
           ],
 
+          'respondCreated() with null' => [
+            'respondCreated',
+            [null],
+            Response::HTTP_CREATED,
+            [],
+          ],
+
           'respondCreated() with response data' => [
             'respondCreated',
             [['user' => ['name' => 'Jet Li']]],
@@ -313,6 +320,13 @@ class ResponseTest extends TestCase
           'respondNoContent()' => [
             'respondNoContent',
             [],
+            Response::HTTP_NO_CONTENT,
+            [],
+          ],
+
+          'respondNoContent() with null' => [
+            'respondNoContent',
+            [null],
             Response::HTTP_NO_CONTENT,
             [],
           ],

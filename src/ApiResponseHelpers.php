@@ -36,7 +36,7 @@ trait ApiResponseHelpers
     /**
      * @param array|Arrayable|JsonSerializable|null $contents
      */
-    public function respondWithSuccess($contents = []): JsonResponse
+    public function respondWithSuccess($contents = null): JsonResponse
     {
         $contents = $this->morphToArray($contents) ?? [];
 
@@ -85,8 +85,9 @@ trait ApiResponseHelpers
     /**
      * @param array|Arrayable|JsonSerializable|null $data
      */
-    public function respondCreated($data = []): JsonResponse
+    public function respondCreated($data = null): JsonResponse
     {
+        $data ??= [];
         return $this->apiResponse(
           $this->morphToArray($data),
           Response::HTTP_CREATED
@@ -120,8 +121,9 @@ trait ApiResponseHelpers
     /**
      * @param array|Arrayable|JsonSerializable|null $data
      */
-    public function respondNoContent($data = []): JsonResponse
+    public function respondNoContent($data = null): JsonResponse
     {
+        $data ??= [];
         $data = $this->morphToArray($data);
 
         return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
