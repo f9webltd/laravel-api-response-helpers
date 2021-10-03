@@ -35,7 +35,7 @@ trait ApiResponseHelpers
      */
     public function respondWithSuccess($contents = []): JsonResponse
     {
-        $contents = $this->morphToArray($contents);
+        $contents = $this->morphToArray($contents) ?? [];
 
         $data = [] === $contents
             ? ['success' => true]

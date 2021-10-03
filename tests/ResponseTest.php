@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace F9Web\ApiResponseHelpers\Tests;
 
 use F9Web\ApiResponseHelpers;
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use JsonException;
@@ -74,6 +75,13 @@ class ResponseTest extends TestCase
             ['success' => true],
           ],
 
+          'respondWithSuccess(), null response data' => [
+            'respondWithSuccess',
+            [null],
+            Response::HTTP_OK,
+            ['success' => true],
+          ],
+
           'respondWithSuccess(), custom response data' => [
             'respondWithSuccess',
             [['order' => 237]],
@@ -93,6 +101,69 @@ class ResponseTest extends TestCase
             [new Collection(['invoice' => 23, 'status' => 'pending'])],
             Response::HTTP_OK,
             ['invoice' => 23, 'status' => 'pending'],
+          ],
+
+          'respondWithSuccess(), empty collection' => [
+            'respondWithSuccess',
+            [new Collection()],
+            Response::HTTP_OK,
+            ['success' => true],
+          ],
+
+          'respondWithSuccess(), Arrayable' => [
+            'respondWithSuccess',
+            [
+              new class implements Arrayable {
+                public function toArray()
+                {
+                  return ['id' => 1, 'name' => 'John'];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['id' => 1, 'name' => 'John']
+          ],
+
+          'respondWithSuccess(), empty Arrayable' => [
+            'respondWithSuccess',
+            [
+              new class implements Arrayable {
+                public function toArray()
+                {
+                  return [];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['success' => true]
+          ],
+
+          'respondWithSuccess(), JsonSerializable' => [
+            'respondWithSuccess',
+            [
+              new class implements \JsonSerializable {
+                public function jsonSerialize()
+                {
+                  return ['id' => 1, 'name' => 'John'];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['id' => 1, 'name' => 'John']
+          ],
+
+          'respondWithSuccess(), empty JsonSerializable' => [
+            'respondWithSuccess',
+            [
+              new class implements \JsonSerializable {
+                public function jsonSerialize()
+                {
+                  return [];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['success' => true]
           ],
 
           'respondOk()' => [
