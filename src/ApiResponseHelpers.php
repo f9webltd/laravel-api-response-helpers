@@ -124,6 +124,7 @@ trait ApiResponseHelpers
     }
 
     /**
+     * @internal
      * @param array|Arrayable|JsonSerializable|null $data
      * @return array|null
      */
@@ -141,6 +142,7 @@ trait ApiResponseHelpers
     }
 
     /**
+     * @internal
      * @param string|\Exception $message
      * @return string
      */
