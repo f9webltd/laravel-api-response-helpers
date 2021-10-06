@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace F9Web\ApiResponseHelpers\Tests;
 
-use F9Web\ApiResponseHelpers;
-use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use JsonException;
 use DomainException;
-use Illuminate\Support\Collection;
+use F9Web\ApiResponseHelpers;
 use F9Web\ApiResponseHelpers\Tests\Models\User;
 use F9Web\ApiResponseHelpers\Tests\Resources\UserResource;
-use Illuminate\Database\Eloquent\Collection As EloquentCollection;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
+use JsonException;
+use Symfony\Component\HttpFoundation\Response;
 
 use function json_encode;
 
