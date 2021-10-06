@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace F9Web\ApiResponseHelpers\Tests;
 
-use F9Web\ApiResponseHelpers;
-use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use JsonException;
 use DomainException;
-use Illuminate\Support\Collection;
+use F9Web\ApiResponseHelpers;
 use F9Web\ApiResponseHelpers\Tests\Models\User;
 use F9Web\ApiResponseHelpers\Tests\Resources\UserResource;
-use Illuminate\Database\Eloquent\Collection As EloquentCollection;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
+use JsonException;
+use Symfony\Component\HttpFoundation\Response;
 
 use function json_encode;
 
@@ -35,8 +36,21 @@ class ResponseTest extends TestCase
         /** @var \Illuminate\Http\JsonResponse $response */
         $response = call_user_func_array([$this->service, $method], $args);
         self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertEquals($code, $response->getStatusCode());
-        self::assertEquals($data, $response->getData(true));
+        self::assertSame($code, $response->getStatusCode());
+        self::assertSame($data, $response->getData(true));
+        self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
+    }
+
+    /**
+     * @dataProvider successDefaultsDataProvider
+     * @throws JsonException
+     */
+    public function testSuccessResponseDefaults(?array $default, $args, int $code, array $data): void
+    {
+        $response = $this->service->setDefaultSuccessResponse($default)->respondWithSuccess($args);
+        self::assertInstanceOf(JsonResponse::class, $response);
+        self::assertSame($code, $response->getStatusCode());
+        self::assertSame($data, $response->getData(true));
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
@@ -74,6 +88,13 @@ class ResponseTest extends TestCase
             ['success' => true],
           ],
 
+          'respondWithSuccess(), null response data' => [
+            'respondWithSuccess',
+            [null],
+            Response::HTTP_OK,
+            ['success' => true],
+          ],
+
           'respondWithSuccess(), custom response data' => [
             'respondWithSuccess',
             [['order' => 237]],
@@ -93,6 +114,69 @@ class ResponseTest extends TestCase
             [new Collection(['invoice' => 23, 'status' => 'pending'])],
             Response::HTTP_OK,
             ['invoice' => 23, 'status' => 'pending'],
+          ],
+
+          'respondWithSuccess(), empty collection' => [
+            'respondWithSuccess',
+            [new Collection()],
+            Response::HTTP_OK,
+            ['success' => true],
+          ],
+
+          'respondWithSuccess(), Arrayable' => [
+            'respondWithSuccess',
+            [
+              new class implements Arrayable {
+                public function toArray()
+                {
+                  return ['id' => 1, 'name' => 'John'];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['id' => 1, 'name' => 'John']
+          ],
+
+          'respondWithSuccess(), empty Arrayable' => [
+            'respondWithSuccess',
+            [
+              new class implements Arrayable {
+                public function toArray()
+                {
+                  return [];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['success' => true]
+          ],
+
+          'respondWithSuccess(), JsonSerializable' => [
+            'respondWithSuccess',
+            [
+              new class implements \JsonSerializable {
+                public function jsonSerialize()
+                {
+                  return ['id' => 1, 'name' => 'John'];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['id' => 1, 'name' => 'John']
+          ],
+
+          'respondWithSuccess(), empty JsonSerializable' => [
+            'respondWithSuccess',
+            [
+              new class implements \JsonSerializable {
+                public function jsonSerialize()
+                {
+                  return [];
+                }
+              },
+            ],
+            Response::HTTP_OK,
+            ['success' => true]
           ],
 
           'respondOk()' => [
@@ -147,6 +231,13 @@ class ResponseTest extends TestCase
           'respondCreated()' => [
             'respondCreated',
             [],
+            Response::HTTP_CREATED,
+            [],
+          ],
+
+          'respondCreated() with null' => [
+            'respondCreated',
+            [null],
             Response::HTTP_CREATED,
             [],
           ],
@@ -233,6 +324,13 @@ class ResponseTest extends TestCase
             [],
           ],
 
+          'respondNoContent() with null' => [
+            'respondNoContent',
+            [null],
+            Response::HTTP_NO_CONTENT,
+            [],
+          ],
+
           // @see https://github.com/f9webltd/laravel-api-response-helpers/issues/5#issuecomment-917418285
           'respondNoContent() with data' => [
             'respondNoContent',
@@ -248,6 +346,42 @@ class ResponseTest extends TestCase
             Response::HTTP_NO_CONTENT,
             ['invoice' => 23, 'status' => 'pending'],
           ],
+        ];
+    }
+
+    public function successDefaultsDataProvider(): array
+    {
+        return [
+            'respondWithSuccess(), default empty array' => [
+                'default' => [],
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithSuccess(), default null' => [
+                'default' => null,
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithSuccess(), default null, null response' => [
+                'default' => null,
+                'args' => null,
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithSuccess(), default non-empty array' => [
+                'default' => ['message' => 'Task successful!'],
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => ['message' => 'Task successful!'],
+            ],
+            'respondWithSuccess(), default non-empty array, custom response data' => [
+                'default' => ['message' => 'Task successful!'],
+                'args' => ['numbers' => [1, 2, 3]],
+                'code' => Response::HTTP_OK,
+                'data' => ['numbers' => [1, 2, 3]],
+            ]
         ];
     }
 }

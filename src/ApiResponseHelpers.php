@@ -14,6 +14,8 @@ use function response;
 
 trait ApiResponseHelpers
 {
+    private ?array $_api_helpers_defaultSuccessData = ['success' => true];
+
     /**
      * @param string|\Exception $message
      * @param  string|null  $key
@@ -33,15 +35,21 @@ trait ApiResponseHelpers
     /**
      * @param array|Arrayable|JsonSerializable|null $contents
      */
-    public function respondWithSuccess($contents = []): JsonResponse
+    public function respondWithSuccess($contents = null): JsonResponse
     {
-        $contents = $this->morphToArray($contents);
+        $contents = $this->morphToArray($contents) ?? [];
 
         $data = [] === $contents
-            ? ['success' => true]
+            ? $this->_api_helpers_defaultSuccessData
             : $contents;
 
         return $this->apiResponse($data);
+    }
+
+    public function setDefaultSuccessResponse(?array $content = null): self
+    {
+        $this->_api_helpers_defaultSuccessData = $content ?? [];
+        return $this;
     }
 
     public function respondOk(string $message): JsonResponse
@@ -76,8 +84,9 @@ trait ApiResponseHelpers
     /**
      * @param array|Arrayable|JsonSerializable|null $data
      */
-    public function respondCreated($data = []): JsonResponse
+    public function respondCreated($data = null): JsonResponse
     {
+        $data ??= [];
         return $this->apiResponse(
           $this->morphToArray($data),
           Response::HTTP_CREATED
@@ -111,8 +120,9 @@ trait ApiResponseHelpers
     /**
      * @param array|Arrayable|JsonSerializable|null $data
      */
-    public function respondNoContent($data = []): JsonResponse
+    public function respondNoContent($data = null): JsonResponse
     {
+        $data ??= [];
         $data = $this->morphToArray($data);
 
         return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
