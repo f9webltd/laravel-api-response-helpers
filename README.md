@@ -50,9 +50,9 @@ Optionally, the trait could be imported within a base controller.
 
 Returns a `404` HTTP status code, an exception object can optionally be passed.
 
-#### `respondWithSuccess(array|Arrayable|JsonSerializable|null $contents = [])`
+#### `respondWithSuccess(array|Arrayable|JsonSerializable|null $contents = null)`
 
-Returns a `200` HTTP status code
+Returns a `200` HTTP status code, optionally `$contents` to return as json can be passed. By default returns `['success' => true]`.
 
 #### `respondOk(string $message)`
 
@@ -70,13 +70,37 @@ Returns a `403` HTTP status code
 
 Returns a `400` HTTP status code
 
-#### `respondCreated(array|Arrayable|JsonSerializable|null $data = [])`
+#### `respondCreated(array|Arrayable|JsonSerializable|null $data = null)`
 
 Returns a `201` HTTP status code, with response optional data
 
-#### `respondNoContent(array|Arrayable|JsonSerializable|null $data = [])`
+#### `respondNoContent(array|Arrayable|JsonSerializable|null $data = null)`
 
 Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()`
+
+#### `setDefaultSuccessResponse(?array $content = null)`
+
+Allows to replace default `['success' => true]` response returned by `respondWithSuccess` with `$content`. You can call it in constructor to change default for all calls or call it in place where you need it. This is a fluent method returning `$this` which lets you chain calls.
+
+Example:
+```php
+$users = collect([10, 20, 30, 40]);
+
+return $this->setDefaultSuccessResponse([])->respondWithSuccess($users);
+```
+
+Or
+```php
+public function __construct()
+{
+    $this->setDefaultSuccessResponse([]);
+}
+...
+$users = collect([10, 20, 30, 40]);
+
+return $this->respondWithSuccess($users);
+```
+
 
 ## Use with additional object types
 
@@ -148,4 +172,3 @@ If you discover any security related issues, please email rob@f9web.co.uk instea
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE) for more information.
-
