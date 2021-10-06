@@ -14,7 +14,6 @@ use function response;
 
 trait ApiResponseHelpers
 {
-
     private ?array $_api_helpers_defaultSuccessData = ['success' => true];
 
     /**
@@ -47,7 +46,7 @@ trait ApiResponseHelpers
         return $this->apiResponse($data);
     }
 
-    public function setDefaultSuccessResponse(?array $content = null)
+    public function setDefaultSuccessResponse(?array $content = null): self
     {
         $this->_api_helpers_defaultSuccessData = $content ?? [];
         return $this;

@@ -78,11 +78,12 @@ Returns a `201` HTTP status code, with response optional data
 
 Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()`
 
-#### `setDefaultSuccessResponse(?array $content = null)`
+#### `setDefaultSuccessResponse(?array $content = null): self`
 
-Allows to replace default `['success' => true]` response returned by `respondWithSuccess` with `$content`. You can call it in constructor to change default for all calls or call it in place where you need it. This is a fluent method returning `$this` which lets you chain calls.
+Optionally, replace the default `['success' => true]` response returned by `respondWithSuccess` with `$content`. This method can be called from the constructor (to change default for all calls), a base API controller or place when required. 
 
-Example:
+`setDefaultSuccessResponse` is a fluent method returning `$this` allows for chained methods calls:
+
 ```php
 $users = collect([10, 20, 30, 40]);
 
@@ -95,7 +96,9 @@ public function __construct()
 {
     $this->setDefaultSuccessResponse([]);
 }
+
 ...
+
 $users = collect([10, 20, 30, 40]);
 
 return $this->respondWithSuccess($users);
