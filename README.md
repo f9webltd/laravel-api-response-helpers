@@ -14,7 +14,7 @@ A simple package allowing for consistent API responses throughout your Laravel a
 ## Requirements
 
 - PHP `^7.4 | ^8.0`
-- Laravel 6, 7 and 8
+- Laravel 6, 7, 8 and 9
 
 ## Installation / Usage
 
