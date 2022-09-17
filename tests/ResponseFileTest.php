@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace F9Web\ApiResponseHelpers\Tests;
 
 use F9Web\Exceptions\FileNotFoundException;
