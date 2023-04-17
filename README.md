@@ -70,6 +70,10 @@ Returns a `403` HTTP status code
 
 Returns a `400` HTTP status code
 
+#### `respondWithErrors(array|Arrayable|JsonSerializable|null $contents = null)`
+
+Returns a `400` HTTP status code
+
 #### `respondCreated(array|Arrayable|JsonSerializable|null $data = null)`
 
 Returns a `201` HTTP status code, with response optional data

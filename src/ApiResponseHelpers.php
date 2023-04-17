@@ -15,6 +15,7 @@ use function response;
 trait ApiResponseHelpers
 {
     private ?array $_api_helpers_defaultSuccessData = ['success' => true];
+    private ?array $_api_helpers_defaultErrorData = ['success' => false];
 
     /**
      * @param string|\Exception $message
@@ -79,6 +80,34 @@ trait ApiResponseHelpers
             ['error' => $message ?? 'Error'],
             Response::HTTP_BAD_REQUEST
         );
+    }
+
+    /**
+     * @param array|Arrayable|JsonSerializable|null $contents
+    */
+    public function respondWithErrors($contents = null): JsonResponse
+    {
+        $contents = $this->morphToArray($contents) ?? [];
+
+        $data = [] === $contents
+            ? $this->_api_helpers_defaultErrorData
+            : $contents;
+
+        return $this->apiResponse(
+            ['errors' => $data],
+            Response::HTTP_BAD_REQUEST
+        );
+        $data = [] === $contents
+        ? $this->_api_helpers_defaultSuccessData
+        : $contents;
+
+    return $this->apiResponse($data);
+    }
+
+    public function setDefaultErrorsResponse(?array $content = null): self
+    {
+        $this->_api_helpers_defaultErrorData = $content ?? [];
+        return $this;
     }
 
     /**
