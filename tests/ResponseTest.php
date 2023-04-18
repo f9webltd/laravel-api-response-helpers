@@ -54,6 +54,19 @@ class ResponseTest extends TestCase
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
+    /**
+     * @dataProvider errorsDefaultsDataProvider
+     * @throws JsonException
+     */
+    public function testErrorsResponseDefaults(?array $default, $args, int $code, array $data): void
+    {
+        $response = $this->service->setDefaultErrorsResponse($default)->respondWithErrors($args);
+        self::assertInstanceOf(JsonResponse::class, $response);
+        self::assertSame($code, $response->getStatusCode());
+        self::assertSame($data, $response->getData(true));
+        self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
+    }
+
     public function basicResponsesDataProvider(): array
     {
         return [
@@ -350,6 +363,42 @@ class ResponseTest extends TestCase
     }
 
     public function successDefaultsDataProvider(): array
+    {
+        return [
+            'respondWithErrors(), default empty array' => [
+                'default' => [],
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithErrors(), default null' => [
+                'default' => null,
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithErrors(), default null, null response' => [
+                'default' => null,
+                'args' => null,
+                'code' => Response::HTTP_OK,
+                'data' => [],
+            ],
+            'respondWithErrors(), default non-empty array' => [
+                'default' => ['message' => 'Task successful!'],
+                'args' => [],
+                'code' => Response::HTTP_OK,
+                'data' => ['message' => 'Task successful!'],
+            ],
+            'respondWithErrors(), default non-empty array, custom response data' => [
+                'default' => ['message' => 'Task successful!'],
+                'args' => ['numbers' => [1, 2, 3]],
+                'code' => Response::HTTP_OK,
+                'data' => ['numbers' => [1, 2, 3]],
+            ]
+        ];
+    }
+
+    public function errorsDefaultsDataProvider(): array
     {
         return [
             'respondWithSuccess(), default empty array' => [
