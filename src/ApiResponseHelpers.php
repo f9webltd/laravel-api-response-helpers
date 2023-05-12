@@ -88,17 +88,8 @@ trait ApiResponseHelpers
     public function respondWithErrors($contents = null): JsonResponse
     {
         $contents = $this->morphToArray($contents) ?? [];
-
         $data = [] === $contents
-            ? $this->_api_helpers_defaultErrorData
-            : $contents;
-
-        return $this->apiResponse(
-            ['errors' => $data],
-            Response::HTTP_BAD_REQUEST
-        );
-        $data = [] === $contents
-        ? $this->_api_helpers_defaultSuccessData
+        ? $this->_api_helpers_defaultErrorData
         : $contents;
 
     return $this->apiResponse($data);
