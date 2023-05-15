@@ -62,7 +62,7 @@ class ResponseTest extends TestCase
     {
         $response = $this->service->setDefaultErrorsResponse($default)->respondWithErrors($args);
         self::assertInstanceOf(JsonResponse::class, $response);
-        self::assertSame(400, $response->getStatusCode());
+        self::assertSame($code, $response->getStatusCode());
         self::assertSame($data, $response->getData(true));
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
