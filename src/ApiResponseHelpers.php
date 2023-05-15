@@ -87,12 +87,14 @@ trait ApiResponseHelpers
     */
     public function respondWithErrors($contents = null): JsonResponse
     {
-        $contents = $this->morphToArray($contents) ?? [];
         $data = [] === $contents
-        ? $this->_api_helpers_defaultErrorData
-        : $contents;
+            ? $this->_api_helpers_defaultErrorData
+            : $contents;
 
-    return $this->apiResponse($data);
+        return $this->apiResponse(
+            ['errors' => $data],
+            Response::HTTP_BAD_REQUEST
+        );
     }
 
     public function setDefaultErrorsResponse(?array $content = null): self
