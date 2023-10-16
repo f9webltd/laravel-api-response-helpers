@@ -14,36 +14,30 @@ use function response;
 
 trait ApiResponseHelpers
 {
-    private ?array $_api_helpers_defaultSuccessData = ['success' => true];
+    private ?array $_api_helpers_defaultSuccessData = [
+        'success' => true,
+    ];
 
-    /**
-     * @param string|\Exception $message
-     * @param  string|null  $key
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
     public function respondNotFound(
-        $message,
+        string|Exception $message,
         ?string $key = 'error'
     ): JsonResponse {
         return $this->apiResponse(
-            [$key => $this->morphMessage($message)],
-            Response::HTTP_NOT_FOUND
+            data: [$key => $this->morphMessage($message)],
+            code: Response::HTTP_NOT_FOUND
         );
     }
 
-    /**
-     * @param array|Arrayable|JsonSerializable|null $contents
-     */
-    public function respondWithSuccess($contents = null): JsonResponse
-    {
-        $contents = $this->morphToArray($contents) ?? [];
+    public function respondWithSuccess(
+        array|Arrayable|JsonSerializable|null $contents = null
+    ): JsonResponse {
+        $contents = $this->morphToArray(data: $contents) ?? [];
 
         $data = [] === $contents
             ? $this->_api_helpers_defaultSuccessData
             : $contents;
 
-        return $this->apiResponse($data);
+        return $this->apiResponse(data: $data);
     }
 
     public function setDefaultSuccessResponse(?array $content = null): self
@@ -54,90 +48,80 @@ trait ApiResponseHelpers
 
     public function respondOk(string $message): JsonResponse
     {
-        return $this->respondWithSuccess(['success' => $message]);
+        return $this->respondWithSuccess(contents: ['success' => $message]);
     }
 
     public function respondUnAuthenticated(?string $message = null): JsonResponse
     {
         return $this->apiResponse(
-            ['error' => $message ?? 'Unauthenticated'],
-            Response::HTTP_UNAUTHORIZED
+            data: ['error' => $message ?? 'Unauthenticated'],
+            code: Response::HTTP_UNAUTHORIZED
         );
     }
 
     public function respondForbidden(?string $message = null): JsonResponse
     {
         return $this->apiResponse(
-            ['error' => $message ?? 'Forbidden'],
-            Response::HTTP_FORBIDDEN
+            data: ['error' => $message ?? 'Forbidden'],
+            code: Response::HTTP_FORBIDDEN
         );
     }
 
     public function respondError(?string $message = null): JsonResponse
     {
         return $this->apiResponse(
-            ['error' => $message ?? 'Error'],
-            Response::HTTP_BAD_REQUEST
+            data: ['error' => $message ?? 'Error'],
+            code: Response::HTTP_BAD_REQUEST
         );
     }
 
-    /**
-     * @param array|Arrayable|JsonSerializable|null $data
-     */
-    public function respondCreated($data = null): JsonResponse
-    {
+    public function respondCreated(
+        array|Arrayable|JsonSerializable|null $data = null
+    ): JsonResponse {
         $data ??= [];
+
         return $this->apiResponse(
-          $this->morphToArray($data),
-          Response::HTTP_CREATED
+          data: $this->morphToArray(data: $data),
+            code: Response::HTTP_CREATED
         );
     }
-    
-    /**
-     * @param string|\Exception $message
-     * @param  string|null  $key
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
+
     public function respondFailedValidation(
-        $message,
+        string|Exception $message,
         ?string $key = 'message'
     ): JsonResponse {
         return $this->apiResponse(
-            [$key => $this->morphMessage($message)],
-            Response::HTTP_UNPROCESSABLE_ENTITY
+            data: [$key => $this->morphMessage($message)],
+            code: Response::HTTP_UNPROCESSABLE_ENTITY
         );
     }
 
     public function respondTeapot(): JsonResponse
     {
         return $this->apiResponse(
-          ['message' => 'I\'m a teapot'],
-          Response::HTTP_I_AM_A_TEAPOT
+          data: ['message' => 'I\'m a teapot'],
+            code: Response::HTTP_I_AM_A_TEAPOT
         );
     }
 
-    /**
-     * @param array|Arrayable|JsonSerializable|null $data
-     */
-    public function respondNoContent($data = null): JsonResponse
-    {
+    public function respondNoContent(
+        array|Arrayable|JsonSerializable|null $data = null
+    ): JsonResponse {
         $data ??= [];
-        $data = $this->morphToArray($data);
+        $data = $this->morphToArray(data: $data);
 
-        return $this->apiResponse($data, Response::HTTP_NO_CONTENT);
+        return $this->apiResponse(
+            data: $data,
+            code: Response::HTTP_NO_CONTENT
+        );
     }
 
     private function apiResponse(array $data, int $code = 200): JsonResponse
     {
-        return response()->json($data, $code);
+        return response()->json(data: $data, status: $code);
     }
 
-    /**
-     * @param array|Arrayable|JsonSerializable|null $data
-     * @return array|null
-     */
-    private function morphToArray($data)
+    private function morphToArray(array|Arrayable|JsonSerializable|null $data): ?array
     {
         if ($data instanceof Arrayable) {
             return $data->toArray();
@@ -150,11 +134,7 @@ trait ApiResponseHelpers
         return $data;
     }
 
-    /**
-     * @param string|\Exception $message
-     * @return string
-     */
-    private function morphMessage($message): string
+    private function morphMessage(string|Exception $message): string
     {
         return $message instanceof Exception
           ? $message->getMessage()
