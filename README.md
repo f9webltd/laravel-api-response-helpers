@@ -1,11 +1,10 @@
 ![](https://banners.beyondco.de/Laravel%20API%20Response%20Helpers.png?theme=light&packageManager=composer+require&packageName=f9webltd%2Flaravel-api-response-helpers&pattern=brickWall&style=style_1&description=Generate+consistent+API+responses+for+your+Laravel+application&md=1&showWatermark=0&fontSize=100px&images=code)
 
-[![run-tests](https://img.shields.io/github/workflow/status/f9webltd/laravel-api-response-helpers/run-tests?style=flat-square)](https://github.com/f9webltd/laravel-api-response-helpers/actions)
+[![Tests](https://github.com/f9webltd/laravel-api-response-helpers/actions/workflows/run-tests.yml/badge.svg)](https://github.com/f9webltd/laravel-api-response-helpers/actions/workflows/run-tests.yml)
 [![Packagist Version](https://img.shields.io/packagist/v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
-[![Packagist PHP Version](
-https://img.shields.io/packagist/php-v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
+[![Total Downloads](https://poser.pugx.org/f9webltd/laravel-api-response-helpers/downloads.png)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
+[![Packagist PHP Version](https://img.shields.io/packagist/php-v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
 [![Packagist License](https://img.shields.io/packagist/l/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
-
 
 # Laravel API Response Helpers
 
@@ -13,13 +12,18 @@ A simple package allowing for consistent API responses throughout your Laravel a
 
 ## Requirements
 
-- PHP `^7.4 | ^8.0`
-- Laravel 6, 7, 8, 9 or 10
+- PHP `^8.0`
+- Laravel `^8.12`, `^9.0` or `^10.0`
+
+### Legacy Support
+
+For PHP `^7.4` and Laravel `^6.0` / `^7.0` support, use package version [`^1.5`](https://github.com/f9webltd/laravel-api-response-helpers/tree/1.5.3)
 
 ## Installation / Usage
 
-`composer require f9webltd/laravel-api-response-helpers`
-
+```bash
+composer require f9webltd/laravel-api-response-helpers
+```
 
 Simply reference the required trait within your controller:
 
@@ -171,6 +175,7 @@ If you discover any security related issues, please email rob@f9web.co.uk instea
 ## Credits
 
 - [Rob Allport](https://github.com/ultrono) for [F9 Web Ltd.](https://www.f9web.co.uk)
+- [All Contributors](https://github.com/f9webltd/laravel-api-response-helpers/graphs/contributors)
 
 ## License
 
