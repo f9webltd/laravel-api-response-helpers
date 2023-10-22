@@ -160,6 +160,10 @@ I wanted to add a simple trait that kept this consistent, in this case:
 
 `$this->respondError('Ouch')`
 
+## Upgrading
+
+Please see [UPGRADING](UPGRADING.md) for details.
+
 ## Contribution
 
 Any ideas are welcome. Feel free to submit any issues or pull requests.
