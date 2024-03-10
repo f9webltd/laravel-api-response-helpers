@@ -55,5 +55,10 @@ jobs:
           composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "symfony/console:>=4.3.4" "mockery/mockery:^1.3.2" --no-interaction --no-update
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
+      - name: Display PHP and Laravel versions
+        run: |
+          php -v | grep ^PHP | cut -d' ' -f2
+          php artisan -V
+
       - name: Execute tests
         run: vendor/bin/phpunit
