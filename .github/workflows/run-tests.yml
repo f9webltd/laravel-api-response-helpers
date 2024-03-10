@@ -58,5 +58,8 @@ jobs:
       - name: Display PHP version
         run: php -v | grep ^PHP | cut -d' ' -f2
 
+      - name: Display Laravel version
+        run: php artisan -V
+
       - name: Execute tests
         run: vendor/bin/phpunit
