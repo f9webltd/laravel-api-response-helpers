@@ -1,6 +1,6 @@
 ![](https://banners.beyondco.de/Laravel%20API%20Response%20Helpers.png?theme=light&packageManager=composer+require&packageName=f9webltd%2Flaravel-api-response-helpers&pattern=brickWall&style=style_1&description=Generate+consistent+API+responses+for+your+Laravel+application&md=1&showWatermark=0&fontSize=100px&images=code)
 
-[![Run Tests - Current](https://github.com/f9webltd/laravel-redirect-response-macros/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/f9webltd/laravel-redirect-response-macros/actions/workflows/run-tests.yml)
+[Tests](https://github.com/f9webltd/laravel-api-response-helpers/actions/workflows/run-tests.yml/badge.svg)](https://github.com/f9webltd/laravel-api-response-helpers/actions/workflows/run-tests.yml)
 [![Packagist Version](https://img.shields.io/packagist/v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
 [![Total Downloads](https://poser.pugx.org/f9webltd/laravel-api-response-helpers/downloads.png)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
 [![Packagist PHP Version](https://img.shields.io/packagist/php-v/f9webltd/laravel-api-response-helpers?style=flat-square)](https://packagist.org/packages/f9webltd/laravel-api-response-helpers)
