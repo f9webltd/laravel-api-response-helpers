@@ -42,9 +42,9 @@ jobs:
           path: ~/.composer/cache/files
           key: php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-composer-${{ matrix.dependencies }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-composer-${{ matrix.dependencies }}-
+            php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-composer-${{ matrix.dependency-version }}-
             php-${{ matrix.php }}-laravel-${{ matrix.laravel }}-
-            php-${{ matrix.php }}-  
+            php-${{ matrix.php }}-
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
