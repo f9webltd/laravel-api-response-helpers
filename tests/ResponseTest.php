@@ -54,7 +54,7 @@ class ResponseTest extends TestCase
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
-    public function basicResponsesDataProvider(): array
+    public static function basicResponsesDataProvider(): array
     {
         return [
           'respondNotFound()' => [
@@ -349,7 +349,7 @@ class ResponseTest extends TestCase
         ];
     }
 
-    public function successDefaultsDataProvider(): array
+    public static function successDefaultsDataProvider(): array
     {
         return [
             'respondWithSuccess(), default empty array' => [
