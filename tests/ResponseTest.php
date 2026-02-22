@@ -14,23 +14,28 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use JsonException;
 use Symfony\Component\HttpFoundation\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function json_encode;
 
+class ApiResponseService {
+    use \F9Web\ApiResponseHelpers;
+}
+
 class ResponseTest extends TestCase
 {
-    protected object $service;
+    protected ApiResponseService $service;
 
     public function setUp(): void
     {
-        $this->service = $this->getObjectForTrait(ApiResponseHelpers::class);
         parent::setUp();
+        $this->service = new ApiResponseService();
     }
 
-    /**
-     * @dataProvider basicResponsesDataProvider
+    /*
      * @throws JsonException
      */
+    #[DataProvider('basicResponsesDataProvider')]
     public function testResponses(string $method, array $args, int $code, array $data): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
@@ -42,11 +47,12 @@ class ResponseTest extends TestCase
     }
 
     /**
-     * @dataProvider successDefaultsDataProvider
      * @throws JsonException
      */
+    #[DataProvider('successDefaultsDataProvider')]
     public function testSuccessResponseDefaults(?array $default, $args, int $code, array $data): void
     {
+        /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->setDefaultSuccessResponse($default)->respondWithSuccess($args);
         self::assertInstanceOf(JsonResponse::class, $response);
         self::assertSame($code, $response->getStatusCode());
