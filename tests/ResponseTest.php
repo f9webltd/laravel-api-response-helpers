@@ -28,9 +28,8 @@ class ResponseTest extends TestCase
 
     public function setUp(): void
     {
-        $this->service = new ApiResponseService();
-        
         parent::setUp();
+        $this->service = new ApiResponseService();
     }
 
     /*
