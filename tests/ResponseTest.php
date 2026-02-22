@@ -18,15 +18,17 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 use function json_encode;
 
+class ApiResponseService {
+    use \F9Web\ApiResponseHelpers;
+}
+
 class ResponseTest extends TestCase
 {
-    protected object $service;
+    protected ApiResponseService $service;
 
     public function setUp(): void
     {
-        $this->service = new class {
-            use \F9Web\ApiResponseHelpers;
-        };
+        $this->service = new ApiResponseService();
         
         parent::setUp();
     }
@@ -51,6 +53,7 @@ class ResponseTest extends TestCase
     #[DataProvider('successDefaultsDataProvider')]
     public function testSuccessResponseDefaults(?array $default, $args, int $code, array $data): void
     {
+        /** @var \Illuminate\Http\JsonResponse $response */
         $response = $this->service->setDefaultSuccessResponse($default)->respondWithSuccess($args);
         self::assertInstanceOf(JsonResponse::class, $response);
         self::assertSame($code, $response->getStatusCode());
