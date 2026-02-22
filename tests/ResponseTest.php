@@ -14,6 +14,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use JsonException;
 use Symfony\Component\HttpFoundation\Response;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function json_encode;
 
@@ -30,10 +31,10 @@ class ResponseTest extends TestCase
         parent::setUp();
     }
 
-    /**
-     * @dataProvider basicResponsesDataProvider
+    /*
      * @throws JsonException
      */
+    #[DataProvider('basicResponsesDataProvider')]
     public function testResponses(string $method, array $args, int $code, array $data): void
     {
         /** @var \Illuminate\Http\JsonResponse $response */
@@ -45,9 +46,9 @@ class ResponseTest extends TestCase
     }
 
     /**
-     * @dataProvider successDefaultsDataProvider
      * @throws JsonException
      */
+    #[DataProvider('successDefaultsDataProvider')]
     public function testSuccessResponseDefaults(?array $default, $args, int $code, array $data): void
     {
         $response = $this->service->setDefaultSuccessResponse($default)->respondWithSuccess($args);
