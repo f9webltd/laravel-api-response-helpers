@@ -23,7 +23,10 @@ class ResponseTest extends TestCase
 
     public function setUp(): void
     {
-        $this->service = $this->getObjectForTrait(ApiResponseHelpers::class);
+        $this->service = new class {
+            use \F9Web\ApiResponseHelpers;
+        };
+        
         parent::setUp();
     }
 
