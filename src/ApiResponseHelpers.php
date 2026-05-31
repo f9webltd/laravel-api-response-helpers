@@ -124,6 +124,31 @@ trait ApiResponseHelpers
         );
     }
 
+    public function respondAccepted(
+      array|Arrayable|JsonSerializable|null $data = null
+    ): JsonResponse {
+        return $this->apiResponse(
+          data: $this->morphToArray(data: $data) ?? [],
+          code: Response::HTTP_ACCEPTED
+        );
+    }
+
+    public function respondTooManyRequests(?string $message = null): JsonResponse
+    {
+        return $this->apiResponse(
+          data: ['error' => $message ?? 'Too Many Requests'],
+          code: Response::HTTP_TOO_MANY_REQUESTS
+        );
+    }
+
+    public function respondConflict(?string $message = null): JsonResponse
+    {
+        return $this->apiResponse(
+          data: ['error' => $message ?? 'Conflict'],
+          code: Response::HTTP_CONFLICT
+        );
+    }
+
     private function apiResponse(array $data, int $code = Response::HTTP_OK): JsonResponse
     {
         return response()->json(data: $data, status: $code);
