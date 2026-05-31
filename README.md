@@ -8,7 +8,7 @@
 
 # Laravel API Response Helpers
 
-A simple package allowing for consistent API responses throughout your Laravel application.
+A simple package allowing for consistent API responses throughout your Laravel application. Originally created to solve issues having with a large legacy project, see the [package motivation](#motivation) section.
 
 ## Requirements
 
@@ -17,11 +17,7 @@ A simple package allowing for consistent API responses throughout your Laravel a
 
 The package supports actively supported Laravel releases as per the official [Laravel Support Policy](https://laravel.com/docs/master/releases#support-policy).
 
-### Legacy Support
-
-For PHP `^7.4` and Laravel `^6.0` / `^7.0` support, use package version [`^1.5`](https://github.com/f9webltd/laravel-api-response-helpers/tree/1.5.3).
-
-For PHP `^8.0` with Laravel `^8.0`, `^9.0` and `^10.0` support use package version [`^2.1.1`](https://github.com/f9webltd/laravel-api-response-helpers/tree/2.1.1).
+Legacy versions of this package support older PHP / Laravel version, see the [legacy](#legacy-support) section.
 
 ## Installation / Usage
 
@@ -50,7 +46,7 @@ class OrdersController
 }
 ```
 
-Optionally, the trait could be imported within a base controller.
+Optionally, the trait can be imported within a base controller.
 
 ## Available methods
 
@@ -85,6 +81,18 @@ Returns a `201` HTTP status code, with response optional data
 #### `respondNoContent(array|Arrayable|JsonSerializable|null $data = null)`
 
 Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()`
+
+#### `public function respondAccepted(array|Arrayable|JsonSerializable|null $data = null)`
+
+Returns a `202` HTTP status code, with response optional data
+
+#### ` public function respondConflict(?string $message = null)`
+
+Returns a `409` HTTP status code, with response optional message. If the message is omitted a default is sent
+
+#### `public function respondTooManyRequests(?string $message = null)`
+
+Returns a `429` HTTP status code, with response optional message. If the message is omitted a default is sent
 
 #### `setDefaultSuccessResponse(?array $content = null): self`
 
@@ -149,6 +157,13 @@ $resource = PostResource::make($post);
 
 return $this->respondCreated($resource);
 ```
+
+## Legacy Support
+
+For PHP `^7.4` and Laravel `^6.0` / `^7.0` support, use package version [`^1.5`](https://github.com/f9webltd/laravel-api-response-helpers/tree/1.5.3).
+
+For PHP `^8.0` with Laravel `^8.0`, `^9.0` and `^10.0` support use package version [`^2.1.1`](https://github.com/f9webltd/laravel-api-response-helpers/tree/2.1.1).
+
 
 ## Motivation
 
