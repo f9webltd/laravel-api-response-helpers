@@ -123,7 +123,7 @@ class ResponseTest extends TestCase
 			[new Collection()],
 			Response::HTTP_OK,
 			['success' => true],
-		],
+		];
 		
 		yield 'respondWithSuccess(), Arrayable' => [
 			'respondWithSuccess',
