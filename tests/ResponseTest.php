@@ -339,7 +339,7 @@ class ResponseTest extends TestCase
 			'respondAccepted',
 			[['role' => 'manager']],
 			Response::HTTP_ACCEPTED,
-			[],
+			['role' => 'manager'],
 		];
 
 		yield 'respondConflict(), no message' => [
