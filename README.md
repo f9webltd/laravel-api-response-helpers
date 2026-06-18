@@ -62,15 +62,15 @@ Returns a `200` HTTP status code, optionally `$contents` to return as json can b
 
 Returns a `200` HTTP status code
 
-#### `respondUnAuthenticated(?string $message = null)`
+#### `respondUnAuthenticated(?string $message = null, ?string $key = 'error')`
 
 Returns a `401` HTTP status code
 
-#### `respondForbidden(?string $message = null)`
+#### `respondForbidden(?string $message = null, ?string $key = 'error')`
 
 Returns a `403` HTTP status code
 
-#### `respondError(?string $message = null)`
+#### `respondError(?string $message = null, ?string $key = 'error')`
 
 Returns a `400` HTTP status code
 
@@ -86,11 +86,11 @@ Returns a `204` HTTP status code, with optional response data. Strictly speaking
 
 Returns a `202` HTTP status code, with response optional data
 
-#### ` public function respondConflict(?string $message = null)`
+#### ` public function respondConflict(?string $message = null, ?string $key = 'error')`
 
 Returns a `409` HTTP status code, with response optional message. If the message is omitted a default is sent
 
-#### `public function respondTooManyRequests(?string $message = null)`
+#### `public function respondTooManyRequests(?string $message = null, ?string $key = 'error')`
 
 Returns a `429` HTTP status code, with response optional message. If the message is omitted a default is sent
 
