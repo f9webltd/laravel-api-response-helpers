@@ -52,26 +52,32 @@ trait ApiResponseHelpers
         return $this->respondWithSuccess(contents: ['success' => $message]);
     }
 
-    public function respondUnAuthenticated(?string $message = null): JsonResponse
-    {
+    public function respondUnAuthenticated(
+      ?string $message = null,
+      ?string $key = 'error'
+    ): JsonResponse {
         return $this->apiResponse(
-          data: ['error' => $message ?? 'Unauthenticated'],
+          data: [$key => $message ?? 'Unauthenticated'],
           code: Response::HTTP_UNAUTHORIZED
         );
     }
 
-    public function respondForbidden(?string $message = null): JsonResponse
-    {
+    public function respondForbidden(
+      ?string $message = null,
+      ?string $key = 'error'
+    ): JsonResponse {
         return $this->apiResponse(
-          data: ['error' => $message ?? 'Forbidden'],
+          data: [$key => $message ?? 'Forbidden'],
           code: Response::HTTP_FORBIDDEN
         );
     }
 
-    public function respondError(?string $message = null): JsonResponse
-    {
+    public function respondError(
+      ?string $message = null,
+      ?string $key = 'error'
+    ): JsonResponse {
         return $this->apiResponse(
-          data: ['error' => $message ?? 'Error'],
+          data: [$key => $message ?? 'Error'],
           code: Response::HTTP_BAD_REQUEST
         );
     }
@@ -133,18 +139,22 @@ trait ApiResponseHelpers
         );
     }
 
-    public function respondTooManyRequests(?string $message = null): JsonResponse
-    {
+    public function respondTooManyRequests(
+      ?string $message = null,
+      ?string $key = 'error'
+    ): JsonResponse {
         return $this->apiResponse(
-          data: ['error' => $message ?? 'Too Many Requests'],
+          data: [$key => $message ?? 'Too Many Requests'],
           code: Response::HTTP_TOO_MANY_REQUESTS
         );
     }
 
-    public function respondConflict(?string $message = null): JsonResponse
-    {
+    public function respondConflict(
+      ?string $message = null,
+      ?string $key = 'error'
+    ): JsonResponse {
         return $this->apiResponse(
-          data: ['error' => $message ?? 'Conflict'],
+          data: [$key => $message ?? 'Conflict'],
           code: Response::HTTP_CONFLICT
         );
     }
