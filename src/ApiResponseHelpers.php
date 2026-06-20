@@ -109,25 +109,13 @@ trait ApiResponseHelpers
         );
     }
 
-    /**
-     * Per RFC 9110, a 204 response MUST NOT include content. Passing
-     * data to apiResponse() here violates the specification - any
-     * provided body is potentially ignored and can cause client
-     * errors. Functionality to return data here was added for legacy
-     * purposes only. In new projects call the method
-     * omitting any arguments
-     *
-     * @deprecated Will be removed in the next major release. The $data parameter
-     *             violates RFC 9110 — a 204 response MUST NOT include content.
-     *             Use respondNoContent() with no arguments.
+    /*
+     * Bypass apiResponse() and response()->json() entirely — a 204 response
+     * must not include a body or Content-Type header per RFC 9110.
      */
-    public function respondNoContent(
-      array|Arrayable|JsonSerializable|null $data = null
-    ): JsonResponse {
-        return $this->apiResponse(
-          data: $this->morphToArray(data: $data) ?? [],
-          code: Response::HTTP_NO_CONTENT
-        );
+    public function respondNoContent(): Response
+    {
+        return response('', Response::HTTP_NO_CONTENT);
     }
 
     public function respondAccepted(

@@ -78,9 +78,9 @@ Returns a `400` HTTP status code
 
 Returns a `201` HTTP status code, with response optional data
 
-#### `respondNoContent(array|Arrayable|JsonSerializable|null $data = null)`
+#### `respondNoContent()`
 
-Returns a `204` HTTP status code, with optional response data. Strictly speaking, the response body should be empty. However, functionality to optionally return data was added to handle legacy projects. Within your own projects, you can simply call the method, omitting parameters, to generate a correct `204` response i.e. `return $this->respondNoContent()`
+Returns a `204` HTTP status code, with an empty response body (RFC 9110)
 
 #### `public function respondAccepted(array|Arrayable|JsonSerializable|null $data = null)`
 
