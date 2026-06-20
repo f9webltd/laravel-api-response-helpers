@@ -13,7 +13,7 @@ A simple package allowing for consistent API responses throughout your Laravel a
 ## Requirements
 
 - PHP `^8.2`
-- Laravel `^11.0`, `^12.0` or `^13.0`
+- Laravel `^12.0` or `^13.0`
 
 The package supports actively supported Laravel releases as per the official [Laravel Support Policy](https://laravel.com/docs/master/releases#support-policy).
 
@@ -160,10 +160,11 @@ return $this->respondCreated($resource);
 
 ## Legacy Support
 
-For PHP `^7.4` and Laravel `^6.0` / `^7.0` support, use package version [`^1.5`](https://github.com/f9webltd/laravel-api-response-helpers/tree/1.5.3).
+For PHP `^8.2` with Laravel `^11.0` support, use package version [`^3.1`](https://github.com/f9webltd/laravel-api-response-helpers/tree/3.1).
 
 For PHP `^8.0` with Laravel `^8.0`, `^9.0` and `^10.0` support use package version [`^2.1.1`](https://github.com/f9webltd/laravel-api-response-helpers/tree/2.1.1).
 
+For PHP `^7.4` and Laravel `^6.0` / `^7.0` support, use package version [`^1.5`](https://github.com/f9webltd/laravel-api-response-helpers/tree/1.5.3).
 
 ## Motivation
 
