@@ -197,6 +197,13 @@ class ResponseTest extends TestCase
           ['error' => 'Denied'],
         ];
 
+        yield 'respondUnAuthenticated(), custom key' => [
+          'respondUnAuthenticated',
+          ['Denied', 'message'],
+          Response::HTTP_UNAUTHORIZED,
+          ['message' => 'Denied'],
+        ];
+
         yield 'respondForbidden(), default message' => [
           'respondForbidden',
           [],
@@ -211,6 +218,13 @@ class ResponseTest extends TestCase
           ['error' => 'Disavowed'],
         ];
 
+        yield 'respondForbidden(), custom key' => [
+          'respondForbidden',
+          ['Disavowed', 'message'],
+          Response::HTTP_FORBIDDEN,
+          ['message' => 'Disavowed'],
+        ];
+
         yield 'respondError(), default message' => [
           'respondError',
           [],
@@ -223,6 +237,13 @@ class ResponseTest extends TestCase
           ['Order tampering detected'],
           Response::HTTP_BAD_REQUEST,
           ['error' => 'Order tampering detected'],
+        ];
+
+        yield 'respondError(), custom key' => [
+          'respondError',
+          ['Order tampering detected', 'message'],
+          Response::HTTP_BAD_REQUEST,
+          ['message' => 'Order tampering detected'],
         ];
 
         yield 'respondCreated()' => [
@@ -397,6 +418,13 @@ class ResponseTest extends TestCase
           Response::HTTP_CONFLICT,
           ['error' => 'Hmmm, conflicted ...'],
         ];
+
+        yield 'respondConflict(), custom key' => [
+          'respondConflict',
+          ['Hmmm, conflicted ...', 'message'],
+          Response::HTTP_CONFLICT,
+          ['message' => 'Hmmm, conflicted ...'],
+        ];
     
         yield 'respondTooManyRequests(), no message' => [
           'respondTooManyRequests',
@@ -410,6 +438,13 @@ class ResponseTest extends TestCase
           ['Spamming ...'],
           Response::HTTP_TOO_MANY_REQUESTS,
           ['error' => 'Spamming ...'],
+        ];
+
+        yield 'respondTooManyRequests(), custom key' => [
+          'respondTooManyRequests',
+          ['Spamming ...', 'message'],
+          Response::HTTP_TOO_MANY_REQUESTS,
+          ['message' => 'Spamming ...'],
         ];
     }
 
