@@ -113,7 +113,7 @@ trait ApiResponseHelpers
      * Bypass apiResponse() and response()->json() entirely — a 204 response
      * must not include a body or Content-Type header per RFC 9110.
      */
-    public function respondNoContent(): JsonResponse
+    public function respondNoContent(): Response
     {
         return response('', Response::HTTP_NO_CONTENT);
     }
