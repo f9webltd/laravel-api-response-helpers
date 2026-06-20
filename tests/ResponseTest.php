@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace F9Web\ApiResponseHelpers\Tests;
 
 use DomainException;
-use F9Web\ApiResponseHelpers;
 use F9Web\ApiResponseHelpers\Tests\Models\User;
 use F9Web\ApiResponseHelpers\Tests\Resources\UserResource;
 use Illuminate\Contracts\Support\Arrayable;
@@ -17,7 +16,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 
 use function json_encode;
 
-class ApiResponseService 
+class ApiResponseService
 {
     use \F9Web\ApiResponseHelpers;
 }
@@ -60,7 +59,17 @@ class ResponseTest extends TestCase
         self::assertJsonStringEqualsJsonString(json_encode($data, JSON_THROW_ON_ERROR), $response->getContent());
     }
 
-        public static function basicResponsesDataProvider(): iterable
+    public function testRespondNoContent(): void
+    {
+        /** @var \Symfony\Component\HttpFoundation\Response $response */
+        $response = $this->service->respondNoContent();
+        self::assertInstanceOf(Response::class, $response);
+        self::assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        self::assertSame('', $response->getContent());
+        self::assertFalse($response->headers->has('Content-Type'));
+    }
+
+    public static function basicResponsesDataProvider(): iterable
     {
         yield 'respondNotFound()' => [
           'respondNotFound',
@@ -339,44 +348,14 @@ class ResponseTest extends TestCase
           Response::HTTP_UNPROCESSABLE_ENTITY,
           ['error' => 'Invoice required'],
         ];
-		
+
         yield 'respondTeapot()' => [
           'respondTeapot',
           [],
           Response::HTTP_I_AM_A_TEAPOT,
           ['message' => 'I\'m a teapot'],
         ];
-        
-        yield 'respondNoContent()' => [
-          'respondNoContent',
-          [],
-          Response::HTTP_NO_CONTENT,
-          [],
-        ];
-        
-        yield 'respondNoContent() with null' => [
-          'respondNoContent',
-          [null],
-          Response::HTTP_NO_CONTENT,
-          [],
-        ];
-        
-        // @see https://github.com/f9webltd/laravel-api-response-helpers/issues/5#issuecomment-917418285
-        yield 'respondNoContent() with data' => [
-          'respondNoContent',
-          [['role' => 'manager']],
-          Response::HTTP_NO_CONTENT,
-          ['role' => 'manager'],
-        ];
-        
-        // @see https://github.com/f9webltd/laravel-api-response-helpers/issues/5#issuecomment-917418285
-        yield 'respondNoContent(), with collection as response' => [
-          'respondNoContent',
-          [new Collection(['invoice' => 23, 'status' => 'pending'])],
-          Response::HTTP_NO_CONTENT,
-          ['invoice' => 23, 'status' => 'pending'],
-        ];
-    
+
         yield 'respondAccepted() with data' => [
           'respondAccepted',
           [['role' => 'manager']],
@@ -390,7 +369,7 @@ class ResponseTest extends TestCase
           Response::HTTP_ACCEPTED,
           [],
         ];
-        
+
         yield 'respondAccepted() with null' => [
           'respondAccepted',
           [null],
@@ -411,7 +390,7 @@ class ResponseTest extends TestCase
           Response::HTTP_CONFLICT,
           ['error' => 'Conflict'],
         ];
-    
+
         yield 'respondConflict(), custom message' => [
           'respondConflict',
           ['Hmmm, conflicted ...'],
@@ -425,14 +404,14 @@ class ResponseTest extends TestCase
           Response::HTTP_CONFLICT,
           ['message' => 'Hmmm, conflicted ...'],
         ];
-    
+
         yield 'respondTooManyRequests(), no message' => [
           'respondTooManyRequests',
           [null],
           Response::HTTP_TOO_MANY_REQUESTS,
           ['error' => 'Too Many Requests'],
         ];
-    
+
         yield 'respondTooManyRequests(), custom message' => [
           'respondTooManyRequests',
           ['Spamming ...'],
@@ -451,38 +430,38 @@ class ResponseTest extends TestCase
     public static function successDefaultsDataProvider(): iterable
     {
         yield 'respondWithSuccess(), default empty array' => [
-            'default' => [],
-            'args' => [],
-            'code' => Response::HTTP_OK,
-            'data' => [],
+          'default' => [],
+          'args' => [],
+          'code' => Response::HTTP_OK,
+          'data' => [],
         ];
 
         yield 'respondWithSuccess(), default null' => [
-            'default' => null,
-            'args' => [],
-            'code' => Response::HTTP_OK,
-            'data' => [],
+          'default' => null,
+          'args' => [],
+          'code' => Response::HTTP_OK,
+          'data' => [],
         ];
 
         yield 'respondWithSuccess(), default null, null response' => [
-            'default' => null,
-            'args' => null,
-            'code' => Response::HTTP_OK,
-            'data' => [],
+          'default' => null,
+          'args' => null,
+          'code' => Response::HTTP_OK,
+          'data' => [],
         ];
 
         yield 'respondWithSuccess(), default non-empty array' => [
-            'default' => ['message' => 'Task successful!'],
-            'args' => [],
-            'code' => Response::HTTP_OK,
-            'data' => ['message' => 'Task successful!'],
+          'default' => ['message' => 'Task successful!'],
+          'args' => [],
+          'code' => Response::HTTP_OK,
+          'data' => ['message' => 'Task successful!'],
         ];
 
         yield 'respondWithSuccess(), default non-empty array, custom response data' => [
-            'default' => ['message' => 'Task successful!'],
-            'args' => ['numbers' => [1, 2, 3]],
-            'code' => Response::HTTP_OK,
-            'data' => ['numbers' => [1, 2, 3]],
+          'default' => ['message' => 'Task successful!'],
+          'args' => ['numbers' => [1, 2, 3]],
+          'code' => Response::HTTP_OK,
+          'data' => ['numbers' => [1, 2, 3]],
         ];
     }
 }
